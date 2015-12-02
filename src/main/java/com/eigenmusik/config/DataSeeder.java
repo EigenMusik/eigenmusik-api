@@ -58,13 +58,19 @@ public class DataSeeder implements ApplicationListener<ContextRefreshedEvent> {
         }
 
         if (trackRepository.count() == 0) {
-            for (int i = 0; i < 1000; i++) {
-                Track track = new Track("TrackName" + i, "TrackArtist", "12345" ,"SOUNDCLOUD");
-                track.setCreatedBy(userProfiles.get(0));
-                track.setCreatedOn(Calendar.getInstance().getTime());
-                tracks.add(track);
-            }
-
+            // Add sample dummy SOUNDCLOUD tracks.
+            Track track1 = new Track("How to fly", "Sticky Fingers", "109712283" ,"SOUNDCLOUD");
+            track1.setCreatedBy(userProfiles.get(0));
+            track1.setCreatedOn(Calendar.getInstance().getTime());
+            Track track2 = new Track("So good", "Nao & Jai Paul", "154829271", "SOUNDCLOUD");
+            track2.setCreatedBy(userProfiles.get(0));
+            track2.setCreatedOn(Calendar.getInstance().getTime());
+            Track track3 = new Track("Young & Unafraid", "Moth and Flame", "202988984", "SOUNDCLOUD");
+            track3.setCreatedBy(userProfiles.get(0));
+            track3.setCreatedOn(Calendar.getInstance().getTime());
+            tracks.add(track1);
+            tracks.add(track2);
+            tracks.add(track3);
             trackRepository.save(tracks);
         }
     }

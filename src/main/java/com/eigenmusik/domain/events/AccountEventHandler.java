@@ -10,7 +10,7 @@ import org.springframework.data.rest.core.annotation.HandleAfterCreate;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 
 @RepositoryEventHandler(Account.class)
-public class AccountEventHandler  {
+public class AccountEventHandler {
 
     private static final Logger logger = LogManager.getLogger(AccountEventHandler.class);
 
@@ -21,8 +21,7 @@ public class AccountEventHandler  {
     public void handleAfterCreate(Account account) {
 
         UserProfile userProfile = userProfileRepository.findByAccount(account);
-        if (userProfile == null)
-        {
+        if (userProfile == null) {
             userProfile = new UserProfile(account);
             userProfile.setDisplayName(account.getName());
             userProfile.setReputation(0);

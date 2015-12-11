@@ -59,7 +59,7 @@ public class DataSeeder implements ApplicationListener<ContextRefreshedEvent> {
 
         if (trackRepository.count() == 0) {
             // Add sample dummy SOUNDCLOUD tracks.
-            Track track1 = new Track("How to fly", "Sticky Fingers", "109712283" ,"SOUNDCLOUD");
+            Track track1 = new Track("How to fly", "Sticky Fingers", "109712283", "SOUNDCLOUD");
             track1.setCreatedBy(userProfiles.get(0));
             track1.setCreatedOn(Calendar.getInstance().getTime());
             Track track2 = new Track("So good", "Nao & Jai Paul", "154829271", "SOUNDCLOUD");

@@ -2,10 +2,20 @@ package com.eigenmusik.domain;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 public class Track {
+
+    @Id
+    @GeneratedValue
+    private Long id;
+    private String name;
+    private String artist;
+    private String ref;
+    private String type;
+    private Date createdOn;
+    @ManyToOne(optional = true, fetch = FetchType.EAGER)
+    private UserProfile createdBy;
 
     public Track() {
 
@@ -17,19 +27,6 @@ public class Track {
         this.ref = ref;
         this.type = type;
     }
-
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    private String name;
-    private String artist;
-    private String ref;
-    private String type;
-    private Date createdOn;
-
-    @ManyToOne(optional = true, fetch = FetchType.EAGER)
-    private UserProfile createdBy;
 
     public UserProfile getCreatedBy() {
         return createdBy;

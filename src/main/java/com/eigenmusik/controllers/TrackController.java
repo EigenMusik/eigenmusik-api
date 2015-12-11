@@ -1,7 +1,6 @@
 package com.eigenmusik.controllers;
 
 import com.eigenmusik.domain.Track;
-import com.eigenmusik.domain.UserProfile;
 import com.eigenmusik.services.AccountRepository;
 import com.eigenmusik.services.TrackRepository;
 import com.eigenmusik.services.UserProfileRepository;
@@ -15,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 @RequestMapping("/tracks")
@@ -27,17 +24,16 @@ public class TrackController {
     @Autowired
     private TrackRepository trackRepository;
 
-
     @Autowired
     private UserProfileRepository userProfileRepository;
-
 
     @Autowired
     private AccountRepository accountRepository;
 
-
     @RequestMapping(method = RequestMethod.GET)
-    public @ResponseBody Page<Track> getTracks(Principal principal, Pageable pageable) {
+    public
+    @ResponseBody
+    Page<Track> getTracks(Principal principal, Pageable pageable) {
         return trackRepository.createdBy(
                 userProfileRepository.findByAccount(
                         accountRepository.findByName(

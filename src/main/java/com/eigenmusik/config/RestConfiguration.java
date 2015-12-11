@@ -41,8 +41,4 @@ public class RestConfiguration extends RepositoryRestMvcConfiguration {
     protected void configureValidatingRepositoryEventListener(ValidatingRepositoryEventListener validatingListener) {
         validatingListener.addValidator("beforeCreate", new AccountValidator());
     }
-
-
-
-
 }

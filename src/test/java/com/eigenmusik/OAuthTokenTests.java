@@ -16,7 +16,7 @@ public class OAuthTokenTests extends IntegrationTestsBase {
 
     @Before
     public void Setup() {
-        Track track = new Track("TrackName", "TrackArtist", "TrackType", "12345");
+        Track track = new Track("TrackName", null, null, "TrackType", "12345", 12345L);
         track.setId(1L);
         track.setCreatedBy(null);
 

@@ -26,15 +26,12 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 public abstract class IntegrationTestsBase {
 
     @Autowired
-    FilterChainProxy springSecurityFilter;
-
-    @Autowired
     protected WebApplicationContext context;
-
+    protected MockMvc mvc;
+    @Autowired
+    FilterChainProxy springSecurityFilter;
     @Autowired
     DefaultTokenServices defaultTokenServices;
-
-    protected MockMvc mvc;
 
     @Before
     public void setUp() {

@@ -1,7 +1,6 @@
 package com.eigenmusik.services;
 
-import com.eigenmusik.domain.Track;
-import com.eigenmusik.domain.UserProfile;
+import com.eigenmusik.domain.Album;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -11,8 +10,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository()
 @RepositoryRestResource(exported = false)
-public interface TrackRepository extends PagingAndSortingRepository<Track, Long> {
-    Page<Track> findByNameContains(@Param("name") String name, Pageable pageable);
-
-    Page<Track> createdBy(@Param("name") UserProfile userProfile, Pageable pageable);
+public interface AlbumRepository extends PagingAndSortingRepository<Album, Long> {
+    Page<Album> findByNameContains(@Param("name") String name, Pageable pageable);
 }

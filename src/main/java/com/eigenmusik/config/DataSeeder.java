@@ -1,11 +1,7 @@
 package com.eigenmusik.config;
 
-import com.eigenmusik.domain.Account;
-import com.eigenmusik.domain.Track;
-import com.eigenmusik.domain.UserProfile;
-import com.eigenmusik.services.AccountRepository;
-import com.eigenmusik.services.TrackRepository;
-import com.eigenmusik.services.UserProfileRepository;
+import com.eigenmusik.domain.*;
+import com.eigenmusik.services.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -30,6 +26,12 @@ public class DataSeeder implements ApplicationListener<ContextRefreshedEvent> {
 
     @Autowired
     TrackRepository trackRepository;
+
+    @Autowired
+    ArtistRepository artistRepository;
+
+    @Autowired
+    AlbumRepository albumRepository;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
@@ -59,13 +61,27 @@ public class DataSeeder implements ApplicationListener<ContextRefreshedEvent> {
 
         if (trackRepository.count() == 0) {
             // Add sample dummy SOUNDCLOUD tracks.
-            Track track1 = new Track("How to fly", "Sticky Fingers", "109712283", "SOUNDCLOUD");
+            Artist stickyFingers = new Artist("Sticky Fingers");
+            artistRepository.save(stickyFingers);
+            Artist nao = new Artist("Nao & Jai Paul");
+            artistRepository.save(nao);
+            Artist mothAndFlame = new Artist("Moth and Flame");
+            artistRepository.save(mothAndFlame);
+
+            Album album = new Album("Some Album");
+            albumRepository.save(album);
+            Album anotherAlbum = new Album("Another Album");
+            albumRepository.save(anotherAlbum);
+            Album whatAlbum = new Album("What album?");
+            albumRepository.save(whatAlbum);
+
+            Track track1 = new Track("How to fly", stickyFingers, album, "109712283", "SOUNDCLOUD", 12345678L);
             track1.setCreatedBy(userProfiles.get(0));
             track1.setCreatedOn(Calendar.getInstance().getTime());
-            Track track2 = new Track("So good", "Nao & Jai Paul", "154829271", "SOUNDCLOUD");
+            Track track2 = new Track("So good", nao, anotherAlbum, "154829271", "SOUNDCLOUD", 12345678L);
             track2.setCreatedBy(userProfiles.get(0));
             track2.setCreatedOn(Calendar.getInstance().getTime());
-            Track track3 = new Track("Young & Unafraid", "Moth and Flame", "202988984", "SOUNDCLOUD");
+            Track track3 = new Track("Young & Unafraid", mothAndFlame, whatAlbum, "202988984", "SOUNDCLOUD", 12345678L);
             track3.setCreatedBy(userProfiles.get(0));
             track3.setCreatedOn(Calendar.getInstance().getTime());
             tracks.add(track1);

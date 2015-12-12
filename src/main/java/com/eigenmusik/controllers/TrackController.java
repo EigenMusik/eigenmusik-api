@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.security.Principal;
 
 @Controller
-@RequestMapping("/tracks")
+@RequestMapping("/rest/tracks")
 public class TrackController {
 
     private static Logger log = Logger.getLogger(TrackController.class);

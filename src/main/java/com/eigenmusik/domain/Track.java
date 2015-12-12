@@ -10,34 +10,28 @@ public class Track {
     @GeneratedValue
     private Long id;
     private String name;
-    private String artist;
-    private String ref;
+    private String uri;
     private String type;
     private Date createdOn;
     @ManyToOne(optional = true, fetch = FetchType.EAGER)
     private UserProfile createdBy;
+    @ManyToOne(optional = true, fetch = FetchType.EAGER)
+    private Artist artist;
+    @ManyToOne(optional = true, fetch = FetchType.EAGER)
+    private Album album;
+    private Long durationMs;
 
     public Track() {
 
     }
 
-    public Track(String name, String artist, String ref, String type) {
+    public Track(String name, Artist artist, Album album, String uri, String type, Long durationMs) {
         this.name = name;
         this.artist = artist;
-        this.ref = ref;
+        this.uri = uri;
         this.type = type;
-    }
-
-    public UserProfile getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(UserProfile createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Long getId() {
-        return id;
+        this.album = album;
+        this.durationMs = durationMs;
     }
 
     public void setId(Long id) {
@@ -52,28 +46,32 @@ public class Track {
         this.name = name;
     }
 
-    public String getArtist() {
+    public Artist getArtist() {
         return artist;
     }
 
-    public void setArtist(String artist) {
-        this.artist = artist;
+    public UserProfile getCreatedBy() {
+        return createdBy;
     }
 
-    public String getRef() {
-        return ref;
+    public void setCreatedBy(UserProfile createdBy) {
+        this.createdBy = createdBy;
     }
 
-    public void setRef(String name) {
-        this.ref = ref;
+    public Album getAlbum() {
+        return album;
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
+    public Long getDuration() {
+        return durationMs;
     }
 
     public String getType() {
         return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public Date getCreatedOn() {

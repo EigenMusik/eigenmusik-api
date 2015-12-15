@@ -2,6 +2,7 @@ package com.eigenmusik.config;
 
 import com.eigenmusik.domain.*;
 import com.eigenmusik.services.*;
+import com.eigenmusik.services.music.soundcloud.Soundcloud;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -38,7 +39,6 @@ public class DataSeeder implements ApplicationListener<ContextRefreshedEvent> {
 
         List<Account> accounts = new ArrayList<>();
         List<UserProfile> userProfiles = new ArrayList<>();
-        List<Track> tracks = new ArrayList<>();
         SecureRandom rnd = new SecureRandom(SecureRandom.getSeed(25));
 
         if (accountRepository.count() == 0) {
@@ -60,34 +60,16 @@ public class DataSeeder implements ApplicationListener<ContextRefreshedEvent> {
         }
 
         if (trackRepository.count() == 0) {
-            // Add sample dummy SOUNDCLOUD tracks.
-            Artist stickyFingers = new Artist("Sticky Fingers");
-            artistRepository.save(stickyFingers);
-            Artist nao = new Artist("Nao & Jai Paul");
-            artistRepository.save(nao);
-            Artist mothAndFlame = new Artist("Moth and Flame");
-            artistRepository.save(mothAndFlame);
-
-            Album album = new Album("Some Album");
-            albumRepository.save(album);
-            Album anotherAlbum = new Album("Another Album");
-            albumRepository.save(anotherAlbum);
-            Album whatAlbum = new Album("What album?");
-            albumRepository.save(whatAlbum);
-
-            Track track1 = new Track("How to fly", stickyFingers, album, "109712283", "SOUNDCLOUD", 12345678L);
-            track1.setCreatedBy(userProfiles.get(0));
-            track1.setCreatedOn(Calendar.getInstance().getTime());
-            Track track2 = new Track("So good", nao, anotherAlbum, "154829271", "SOUNDCLOUD", 12345678L);
-            track2.setCreatedBy(userProfiles.get(0));
-            track2.setCreatedOn(Calendar.getInstance().getTime());
-            Track track3 = new Track("Young & Unafraid", mothAndFlame, whatAlbum, "202988984", "SOUNDCLOUD", 12345678L);
-            track3.setCreatedBy(userProfiles.get(0));
-            track3.setCreatedOn(Calendar.getInstance().getTime());
-            tracks.add(track1);
-            tracks.add(track2);
-            tracks.add(track3);
+            Soundcloud sc = new Soundcloud();
+            List<Track> tracks = sc.getTracks();
+            tracks.forEach(track -> track.setCreatedBy(userProfiles.get(0)));
+            tracks.forEach(track1 -> track1.setCreatedOn(Calendar.getInstance().getTime()));
             trackRepository.save(tracks);
+
+            for(Track track : tracks) {
+                logger.info(track);
+            }
+
         }
     }
 }

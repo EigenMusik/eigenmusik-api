@@ -15,9 +15,9 @@ public class Track {
     private Date createdOn;
     @ManyToOne(optional = true, fetch = FetchType.EAGER)
     private UserProfile createdBy;
-    @ManyToOne(optional = true, fetch = FetchType.EAGER)
+    @ManyToOne(optional = true, fetch = FetchType.EAGER, cascade=CascadeType.ALL)
     private Artist artist;
-    @ManyToOne(optional = true, fetch = FetchType.EAGER)
+    @ManyToOne(optional = true, fetch = FetchType.EAGER, cascade=CascadeType.ALL)
     private Album album;
     private Long durationMs;
 

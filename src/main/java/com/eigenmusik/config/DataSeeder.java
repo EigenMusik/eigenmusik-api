@@ -65,11 +65,6 @@ public class DataSeeder implements ApplicationListener<ContextRefreshedEvent> {
             tracks.forEach(track -> track.setCreatedBy(userProfiles.get(0)));
             tracks.forEach(track1 -> track1.setCreatedOn(Calendar.getInstance().getTime()));
             trackRepository.save(tracks);
-
-            for(Track track : tracks) {
-                logger.info(track);
-            }
-
         }
     }
 }

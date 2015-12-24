@@ -31,14 +31,16 @@ public class Soundcloud implements MusicService {
         SoundcloudTrack[] tracks =responseEntity.getBody();
         List<SoundcloudTrack> tracksList = Arrays.asList(tracks);
 
-        return tracksList.stream().map(
-                t -> new Track(
-                        t.getTitle(),
-                        new Artist(t.getUser().getUsername()),
-                        new Album("An album"),
-                        t.getId().toString(),
-                        "SOUNDCLOUD",
-                        12345678L)
-        ).collect(Collectors.toList());
+        return tracksList.stream().map(t -> mapToTrack(t)).collect(Collectors.toList());
+    }
+
+    private Track mapToTrack(SoundcloudTrack t) {
+        return  new Track(
+                t.getTitle(),
+                new Artist(t.getUser().getUsername()),
+                new Album("An album"),
+                t.getId().toString(),
+                "SOUNDCLOUD",
+                12345678L);
     }
 }

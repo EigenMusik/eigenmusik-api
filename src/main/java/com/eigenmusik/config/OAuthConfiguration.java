@@ -85,7 +85,7 @@ public class OAuthConfiguration {
         @Override
         public void configure(HttpSecurity http) throws Exception {
 
-            http.authorizeRequests().antMatchers("/**").permitAll()
+            http.authorizeRequests().antMatchers("/oauth/**", "/rest/**").permitAll()
                     .and()
                     .csrf().disable()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

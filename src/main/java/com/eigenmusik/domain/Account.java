@@ -18,6 +18,16 @@ public class Account {
     private String password;
     private boolean isActive;
 
+    public Account() {
+
+    }
+
+    public Account(String username, String password, String email) {
+        this.name = username;
+        this.password = password;
+        this.email = email;
+    }
+
     public Long getId() {
         return id;
     }

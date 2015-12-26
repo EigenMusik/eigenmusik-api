@@ -1,9 +1,9 @@
-package com.eigenmusik.services.music.soundcloud.domain;
+package com.eigenmusik.services.sources.soundcloud;
 
 /**
  * Created by timcoulson on 15/12/2015.
  */
-import com.eigenmusik.services.music.soundcloud.Soundcloud;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -40,12 +40,4 @@ public class SoundcloudTrack {
         this.user = user;
     }
 
-    @Override
-    public String toString() {
-        return "Quote{" +
-                "id='" + id + '\'' +
-                ", title='" + title + '\'' +
-                ", user='" + user +
-                '}';
-    }
 }

@@ -7,6 +7,8 @@ import com.eigenmusik.exceptions.UsernameExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.security.Principal;
+
 /**
  * Created by timcoulson on 24/12/2015.
  */
@@ -20,8 +22,12 @@ public class UserService {
     @Autowired
     private AccountRepository accountRepository;
 
+    public UserProfile getUserProfile(Principal principal) {
+        return userProfileRepository.findByAccount(accountRepository.findByName(principal.getName()));
+    }
+
     public UserProfile getUserProfile(String username) {
-       return userProfileRepository.findByAccount(accountRepository.findByName(username));
+        return userProfileRepository.findByAccount(accountRepository.findByName(username));
     }
 
     public UserProfile getUserProfileByEmail(String email) {

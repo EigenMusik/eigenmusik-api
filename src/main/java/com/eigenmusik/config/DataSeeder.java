@@ -1,8 +1,8 @@
 package com.eigenmusik.config;
 
-import com.eigenmusik.domain.*;
+import com.eigenmusik.domain.Account;
+import com.eigenmusik.domain.UserProfile;
 import com.eigenmusik.services.*;
-import com.eigenmusik.services.music.soundcloud.Soundcloud;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 @Component
@@ -57,14 +56,6 @@ public class DataSeeder implements ApplicationListener<ContextRefreshedEvent> {
             }
             accountRepository.save(accounts);
             userProfileRepository.save(userProfiles);
-        }
-
-        if (trackRepository.count() == 0) {
-            Soundcloud sc = new Soundcloud();
-            List<Track> tracks = sc.getTracks();
-            tracks.forEach(track -> track.setCreatedBy(userProfiles.get(0)));
-            tracks.forEach(track1 -> track1.setCreatedOn(Calendar.getInstance().getTime()));
-            trackRepository.save(tracks);
         }
     }
 }

@@ -4,13 +4,8 @@ import com.eigenmusik.domain.Account;
 import com.eigenmusik.domain.UserProfile;
 import com.eigenmusik.exceptions.EmailExistsException;
 import com.eigenmusik.exceptions.UsernameExistsException;
-import com.eigenmusik.services.AccountRepository;
-import com.eigenmusik.services.UserProfileRepository;
 import com.eigenmusik.services.UserService;
 import org.apache.log4j.Logger;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,11 +39,11 @@ public class AuthenticationController {
     ResponseEntity<?> register(@RequestBody Account account) {
         try {
             userService.register(account);
-            return new  ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (UsernameExistsException e) {
-            return new  ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (EmailExistsException e) {
-            return new  ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

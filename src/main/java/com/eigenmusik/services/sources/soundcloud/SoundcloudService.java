@@ -9,6 +9,7 @@ import com.eigenmusik.services.UserService;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -28,9 +29,28 @@ import java.util.stream.Collectors;
  * Created by timcoulson on 15/12/2015.
  */
 @Component
+@ConfigurationProperties(prefix = "soundcloud")
 public class SoundcloudService {
 
     private static Logger log = Logger.getLogger(SoundcloudService.class);
+
+    private String clientId;
+
+    private String clientSecret;
+
+    private String redirectUrl;
+
+    public void setRedirectUrl(String redirectUrl) {
+        this.redirectUrl = redirectUrl;
+    }
+
+    public void setClientSecret(String clientSecret) {
+        this.clientSecret = clientSecret;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
 
     @Autowired
     private SoundcloudAccessTokenRepository accessTokenRepository;
@@ -49,7 +69,7 @@ public class SoundcloudService {
 
     public List<Track> getTracks(SoundcloudUser user) {
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<SoundcloudTrack[]> responseEntity = restTemplate.getForEntity("http://api.soundcloud.com/users/" + user.getId() + "/favorites?client_id=f434bba227f3c05662515accf6d287fc", SoundcloudTrack[].class);
+        ResponseEntity<SoundcloudTrack[]> responseEntity = restTemplate.getForEntity("http://api.soundcloud.com/users/" + user.getId() + "/favorites?client_id=" + clientId, SoundcloudTrack[].class);
 
         SoundcloudTrack[] tracks = responseEntity.getBody();
         List<SoundcloudTrack> tracksList = Arrays.asList(tracks);
@@ -72,10 +92,10 @@ public class SoundcloudService {
 
         // TODO save these constants somewhere!
         MultiValueMap<String, String> bodyMap = new LinkedMultiValueMap<String, String>();
-        bodyMap.add("client_id", "184ffc1f8e74dcb4aba252c10235a121");
-        bodyMap.add("client_secret", "9c76bb2878b3f6388187d64c56e486f6");
+        bodyMap.add("client_id", clientId);
+        bodyMap.add("client_secret", clientSecret);
         bodyMap.add("grant_type", "authorization_code");
-        bodyMap.add("redirect_uri", "http://localhost:9000/callbacks/soundcloud.html");
+        bodyMap.add("redirect_uri", redirectUrl);
         bodyMap.add("code", code);
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<MultiValueMap<String, String>>(bodyMap, headers);

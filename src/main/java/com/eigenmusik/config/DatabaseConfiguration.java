@@ -29,16 +29,20 @@ public class DatabaseConfiguration {
     @Primary
     public BasicDataSource dataSource() throws URISyntaxException {
         URI dbUri = new URI(url);
+        BasicDataSource basicDataSource = new BasicDataSource();
 
-        String username = dbUri.getUserInfo().split(":")[0];
-        String password = dbUri.getUserInfo().split(":")[1];
+        String[] userInfo = dbUri.getUserInfo().split(":");
+        if (userInfo.length >= 1) {
+            basicDataSource.setUsername(userInfo[0]);
+        }
+
+        if (userInfo.length == 2) {
+            basicDataSource.setPassword(userInfo[1]);
+        }
+
         String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
 
-        BasicDataSource basicDataSource = new BasicDataSource();
         basicDataSource.setUrl(dbUrl);
-        basicDataSource.setUsername(username);
-        basicDataSource.setPassword(password);
-
         return basicDataSource;
     }
 }

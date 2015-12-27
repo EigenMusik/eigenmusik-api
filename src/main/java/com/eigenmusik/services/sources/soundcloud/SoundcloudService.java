@@ -39,6 +39,17 @@ public class SoundcloudService {
     private String clientSecret;
 
     private String redirectUrl;
+    @Autowired
+    private SoundcloudAccessTokenRepository accessTokenRepository;
+    @Autowired
+    private SoundcloudUserRepository soundcloudUserRepository;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private TrackRepository trackRepository;
+
+    public SoundcloudService() {
+    }
 
     public void setRedirectUrl(String redirectUrl) {
         this.redirectUrl = redirectUrl;
@@ -50,21 +61,6 @@ public class SoundcloudService {
 
     public void setClientId(String clientId) {
         this.clientId = clientId;
-    }
-
-    @Autowired
-    private SoundcloudAccessTokenRepository accessTokenRepository;
-
-    @Autowired
-    private SoundcloudUserRepository soundcloudUserRepository;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private TrackRepository trackRepository;
-
-    public SoundcloudService() {
     }
 
     public List<Track> getTracks(SoundcloudUser user) {
@@ -90,7 +86,6 @@ public class SoundcloudService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        // TODO save these constants somewhere!
         MultiValueMap<String, String> bodyMap = new LinkedMultiValueMap<String, String>();
         bodyMap.add("client_id", clientId);
         bodyMap.add("client_secret", clientSecret);
@@ -103,16 +98,6 @@ public class SoundcloudService {
         ObjectMapper mapper = new ObjectMapper();
 
         return mapper.readValue(accessTokenString, SoundcloudAccessToken.class);
-    }
-
-    private Track mapToTrack(SoundcloudTrack t) {
-        return new Track(
-                t.getTitle(),
-                new Artist(t.getUser().getUsername()),
-                new Album("An album"),
-                t.getId().toString(),
-                "SOUNDCLOUD",
-                12345678L);
     }
 
     public boolean connectAccount(String code, UserProfile user) {
@@ -141,4 +126,15 @@ public class SoundcloudService {
 
         return true;
     }
+
+    private Track mapToTrack(SoundcloudTrack t) {
+        return new Track(
+                t.getTitle(),
+                new Artist(t.getUser().getUsername()),
+                new Album("An album"),
+                t.getId().toString(),
+                "SOUNDCLOUD",
+                12345678L);
+    }
+
 }

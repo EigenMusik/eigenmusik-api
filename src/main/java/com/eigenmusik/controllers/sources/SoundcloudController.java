@@ -43,8 +43,7 @@ public class SoundcloudController {
         UserProfile user = userService.getUserProfile(principal);
         if (soundcloudService.connectAccount(code, user)) {
             return new ResponseEntity<>(HttpStatus.OK);
-        }
-        ;
+        };
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

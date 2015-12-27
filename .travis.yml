@@ -1,6 +1,8 @@
 language: java
 jdk:
 - oraclejdk8
+before_script:
+  - psql -c 'create database eigenmusik;' -U postgres
 deploy:
   provider: heroku
   api_key:

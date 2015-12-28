@@ -25,14 +25,18 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Created by timcoulson on 15/12/2015.
- */
 @Component
 @ConfigurationProperties(prefix = "soundcloud")
 public class SoundcloudService {
 
     private static Logger log = Logger.getLogger(SoundcloudService.class);
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    public void setRestTemplate(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     private String clientId;
 
@@ -64,7 +68,6 @@ public class SoundcloudService {
     }
 
     public List<Track> getTracks(SoundcloudUser user) {
-        RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<SoundcloudTrack[]> responseEntity = restTemplate.getForEntity("http://api.soundcloud.com/users/" + user.getId() + "/favorites?client_id=" + clientId, SoundcloudTrack[].class);
 
         SoundcloudTrack[] tracks = responseEntity.getBody();
@@ -74,7 +77,6 @@ public class SoundcloudService {
     }
 
     public SoundcloudUser getMe(SoundcloudAccessToken token) {
-        RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<SoundcloudUser> responseEntity = restTemplate.getForEntity("http://api.soundcloud.com/me?oauth_token=" + token.getAccessToken(), SoundcloudUser.class);
 
         SoundcloudUser user = responseEntity.getBody();
@@ -82,7 +84,6 @@ public class SoundcloudService {
     }
 
     private SoundcloudAccessToken exchangeToken(String code) throws IOException {
-        RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 

@@ -5,15 +5,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
-/**
- * Created by timcoulson on 27/12/2015.
- */
 @Configuration
 @ConfigurationProperties(prefix = "spring.datasource")
+@Profile({ "prod", "dev" })
 public class DatabaseConfiguration {
 
     private String url;

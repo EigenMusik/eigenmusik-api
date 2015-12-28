@@ -5,6 +5,9 @@ package com.eigenmusik.services.sources.soundcloud;
  */
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.codehaus.jackson.map.ObjectMapper;
+
+import java.io.IOException;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SoundcloudTrack {
@@ -38,6 +41,16 @@ public class SoundcloudTrack {
 
     public void setUser(SoundcloudUser user) {
         this.user = user;
+    }
+
+    @Override
+    public String toString() {
+        try {
+            return new ObjectMapper().writeValueAsString(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

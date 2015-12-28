@@ -53,8 +53,7 @@ public class SoundcloudServiceTest {
     }
 
     @Test
-    public void testGetMessage() throws IOException {
-
+    public void testGetTracks() throws IOException {
         Long userId = 123L;
 
         mockServer.expect(requestTo("http://api.soundcloud.com/users/" + userId + "/favorites?client_id=" + clientId))
@@ -69,6 +68,5 @@ public class SoundcloudServiceTest {
         mockServer.verify();
         assertThat(responseTracks.get(0).getArtist().getName(), containsString("Data Transmission"));
         assertThat(responseTracks.get(0).getName(), containsString("Mix of the Day: Adeline"));
-
     }
 }

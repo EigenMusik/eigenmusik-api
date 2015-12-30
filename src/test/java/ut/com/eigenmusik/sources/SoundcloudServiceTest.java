@@ -7,6 +7,7 @@ import com.eigenmusik.services.sources.soundcloud.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.springframework.web.client.HttpClientErrorException;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
 
@@ -42,6 +44,7 @@ public class SoundcloudServiceTest {
 
     @Test
     public void testSuccessfulConnect() throws IOException {
+        String code = "aCode";
         SoundcloudAccessToken accessToken = factory.manufacturePojo(SoundcloudAccessToken.class);
         SoundcloudUser soundcloudUser = factory.manufacturePojo(SoundcloudUser.class);
         UserProfile userProfile = factory.manufacturePojo(UserProfile.class);
@@ -59,12 +62,26 @@ public class SoundcloudServiceTest {
         }
 
         when(soundcloudGateway.getTracks(soundcloudUser)).thenReturn(soundcloudTracks);
-        when(soundcloudGateway.exchangeToken("aCode")).thenReturn(accessToken);
+        when(soundcloudGateway.exchangeToken(code)).thenReturn(accessToken);
 
-        soundcloudService.connectAccount("aCode", userProfile);
+        assert(soundcloudService.connectAccount(code, userProfile));
 
         verify(soundcloudUserRepository, times(1)).save(soundcloudUser);
         verify(soundcloudAccessTokenRepository, times(1)).save(accessToken);
         verify(trackRepository, times(1)).save(Mockito.anyListOf(Track.class));
+    }
+
+    @Test
+    public void testUnsuccessfulConnect() throws IOException {
+        String code = "aBadCode";
+        SoundcloudAccessToken accessToken = factory.manufacturePojo(SoundcloudAccessToken.class);
+        UserProfile userProfile = factory.manufacturePojo(UserProfile.class);
+
+        assertNotNull(accessToken);
+
+        when(soundcloudGateway.exchangeToken(code)
+        ).thenThrow(HttpClientErrorException.class);
+
+        assertFalse(soundcloudService.connectAccount(code, userProfile));
     }
 }

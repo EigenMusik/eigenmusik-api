@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 @ConfigurationProperties(prefix = "soundcloud")
 public class SoundcloudService {
 
+    private static Logger log = Logger.getLogger(SoundcloudService.class);
     private SoundcloudGateway soundcloudGateway;
     private SoundcloudAccessTokenRepository soundcloudAccessTokenRepository;
     private SoundcloudUserRepository soundcloudUserRepository;
@@ -50,28 +52,24 @@ public class SoundcloudService {
         SoundcloudAccessToken accessToken;
         try {
             accessToken = soundcloudGateway.exchangeToken(code);
+            // Get user entity from soundcloud.
+            SoundcloudUser soundcloudUser = soundcloudGateway.getMe(accessToken);
+            soundcloudUser.setCreatedBy(user);
+            soundcloudUser.setAccessToken(accessToken);
+            List<Track> tracks = soundcloudGateway.getTracks(soundcloudUser).stream().map(t -> mapToTrack(t)).collect(Collectors.toList());
+            tracks.forEach(track -> track.setCreatedBy(user));
+            tracks.forEach(track1 -> track1.setCreatedOn(Calendar.getInstance().getTime()));
+            soundcloudAccessTokenRepository.save(accessToken);
+            soundcloudUserRepository.save(soundcloudUser);
+            trackRepository.save(tracks);
+            return true;
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
+            return false;
+        } catch (HttpClientErrorException e) {
+            log.error(e.getMessage());
             return false;
         }
-
-        // Get user entity from soundcloud.
-        SoundcloudUser soundcloudUser = soundcloudGateway.getMe(accessToken);
-        soundcloudUser.setCreatedBy(user);
-        soundcloudUser.setAccessToken(accessToken);
-
-        soundcloudAccessTokenRepository.save(accessToken);
-        soundcloudUserRepository.save(soundcloudUser);
-
-        // Retrieve tracks and associate with eigenmusik account.
-
-        List<Track> tracks = soundcloudGateway.getTracks(soundcloudUser).stream().map(t -> mapToTrack(t)).collect(Collectors.toList());
-
-        tracks.forEach(track -> track.setCreatedBy(user));
-        tracks.forEach(track1 -> track1.setCreatedOn(Calendar.getInstance().getTime()));
-        trackRepository.save(tracks);
-
-        return true;
     }
 
     private Track mapToTrack(SoundcloudTrack t) {

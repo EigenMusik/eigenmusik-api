@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -30,23 +31,18 @@ public class SoundcloudGateway {
         this.restTemplate = restTemplate;
     }
 
-    public List<SoundcloudTrack> getTracks(SoundcloudUser user) {
-        ResponseEntity<SoundcloudTrack[]> responseEntity = restTemplate.getForEntity("http://api.soundcloud.com/users/" + user.getId() + "/favorites?client_id=" + config.getClientId(), SoundcloudTrack[].class);
-
-        SoundcloudTrack[] tracks = responseEntity.getBody();
-        List<SoundcloudTrack> tracksList = Arrays.asList(tracks);
-
-        return tracksList;
+    public List<SoundcloudTrack> getTracks(SoundcloudUser user) throws IOException, HttpClientErrorException {
+        String requestUrl ="http://api.soundcloud.com/users/" + user.getId() + "/favorites?client_id=" + config.getClientId();
+        return Arrays.asList(restTemplate.getForEntity(requestUrl, SoundcloudTrack[].class).getBody());
     }
 
-    public SoundcloudUser getMe(SoundcloudAccessToken token) {
-        ResponseEntity<SoundcloudUser> responseEntity = restTemplate.getForEntity("http://api.soundcloud.com/me?oauth_token=" + token.getAccessToken(), SoundcloudUser.class);
-
-        SoundcloudUser user = responseEntity.getBody();
-        return user;
+    public SoundcloudUser getMe(SoundcloudAccessToken token) throws HttpClientErrorException {
+        return restTemplate
+                .getForEntity("http://api.soundcloud.com/me?oauth_token=" + token.getAccessToken(), SoundcloudUser.class)
+                .getBody();
     }
 
-    public SoundcloudAccessToken exchangeToken(String code) throws IOException {
+    public SoundcloudAccessToken exchangeToken(String code) throws IOException, HttpClientErrorException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 

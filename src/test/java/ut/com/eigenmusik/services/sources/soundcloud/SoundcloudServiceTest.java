@@ -1,4 +1,4 @@
-package ut.com.eigenmusik.sources;
+package ut.com.eigenmusik.services.sources.soundcloud;
 
 import com.eigenmusik.domain.Track;
 import com.eigenmusik.domain.UserProfile;

@@ -3,6 +3,7 @@ package com.eigenmusik.controllers;
 import com.eigenmusik.domain.Account;
 import com.eigenmusik.domain.UserProfile;
 import com.eigenmusik.exceptions.EmailExistsException;
+import com.eigenmusik.exceptions.UserDoesntExistException;
 import com.eigenmusik.exceptions.UsernameExistsException;
 import com.eigenmusik.services.UserService;
 import org.apache.log4j.Logger;
@@ -29,8 +30,12 @@ public class AuthenticationController {
     @RequestMapping("/me")
     public
     @ResponseBody
-    UserProfile getMe(Principal principal) {
-        return userService.getUserProfile(principal.getName());
+    ResponseEntity<?> getMe(Principal principal) {
+        try {
+            return new ResponseEntity<>(userService.getUserProfile(principal.getName()), HttpStatus.OK);
+        } catch (UserDoesntExistException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)

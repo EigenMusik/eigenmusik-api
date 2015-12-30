@@ -1,6 +1,7 @@
 package com.eigenmusik.controllers.sources;
 
 import com.eigenmusik.domain.UserProfile;
+import com.eigenmusik.exceptions.UserDoesntExistException;
 import com.eigenmusik.services.TrackRepository;
 import com.eigenmusik.services.UserService;
 import com.eigenmusik.services.sources.soundcloud.SoundcloudAccessTokenRepository;
@@ -38,9 +39,9 @@ public class SoundcloudController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public
     @ResponseBody
-    ResponseEntity<?> add(@RequestBody String code, Principal principal) {
+    ResponseEntity<HttpStatus> add(@RequestBody String code, Principal principal) throws UserDoesntExistException {
         // Retrieve the access token from the authorization code.
-        UserProfile user = userService.getUserProfile(principal);
+        UserProfile user = userService.getUserProfile(principal.getName());
         if (soundcloudService.connectAccount(code, user)) {
             return new ResponseEntity<>(HttpStatus.OK);
         };

@@ -1,0 +1,70 @@
+package ut.com.eigenmusik.sources;
+
+import com.eigenmusik.domain.Track;
+import com.eigenmusik.domain.UserProfile;
+import com.eigenmusik.services.TrackRepository;
+import com.eigenmusik.services.sources.soundcloud.*;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+import uk.co.jemos.podam.api.PodamFactory;
+import uk.co.jemos.podam.api.PodamFactoryImpl;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.*;
+
+/**
+ * Created by timcoulson on 30/12/2015.
+ */
+public class SoundcloudServiceTest {
+
+    private PodamFactory factory = new PodamFactoryImpl();
+    private SoundcloudGateway soundcloudGateway;
+    private SoundcloudUserRepository soundcloudUserRepository;
+    private SoundcloudAccessTokenRepository soundcloudAccessTokenRepository;
+    private TrackRepository trackRepository;
+    private SoundcloudService soundcloudService;
+
+    @Before
+    public void setUp() throws IOException {
+
+        soundcloudGateway = Mockito.mock(SoundcloudGateway.class);
+        soundcloudUserRepository = Mockito.mock(SoundcloudUserRepository.class);
+        soundcloudAccessTokenRepository = Mockito.mock(SoundcloudAccessTokenRepository.class);
+        trackRepository = Mockito.mock(TrackRepository.class);
+        soundcloudService = new SoundcloudService(soundcloudGateway, soundcloudAccessTokenRepository, soundcloudUserRepository, trackRepository);
+
+    }
+
+    @Test
+    public void testSuccessfulConnect() throws IOException {
+        SoundcloudAccessToken accessToken = factory.manufacturePojo(SoundcloudAccessToken.class);
+        SoundcloudUser soundcloudUser = factory.manufacturePojo(SoundcloudUser.class);
+        UserProfile userProfile = factory.manufacturePojo(UserProfile.class);
+
+        assertNotNull(accessToken);
+
+        when(soundcloudGateway.getMe(accessToken)
+        ).thenReturn(soundcloudUser);
+
+        int i = 0;
+        List<SoundcloudTrack> soundcloudTracks = new ArrayList<>();
+        while (i < 5) {
+            soundcloudTracks.add(i, factory.manufacturePojo(SoundcloudTrack.class));
+            i++;
+        }
+
+        when(soundcloudGateway.getTracks(soundcloudUser)).thenReturn(soundcloudTracks);
+        when(soundcloudGateway.exchangeToken("aCode")).thenReturn(accessToken);
+
+        soundcloudService.connectAccount("aCode", userProfile);
+
+        verify(soundcloudUserRepository, times(1)).save(soundcloudUser);
+        verify(soundcloudAccessTokenRepository, times(1)).save(accessToken);
+        verify(trackRepository, times(1)).save(Mockito.anyListOf(Track.class));
+    }
+}

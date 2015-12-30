@@ -1,4 +1,4 @@
-package com.eigenmusik;
+package it.com.eigenmusik;
 
 import com.eigenmusik.domain.Account;
 import com.eigenmusik.domain.UserProfile;

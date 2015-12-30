@@ -1,4 +1,4 @@
-package com.eigenmusik;
+package it.com.eigenmusik;
 
 import com.eigenmusik.domain.Track;
 import com.eigenmusik.services.TrackRepository;

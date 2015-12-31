@@ -4,6 +4,7 @@ import com.eigenmusik.domain.Track;
 import com.eigenmusik.services.AccountRepository;
 import com.eigenmusik.services.TrackRepository;
 import com.eigenmusik.services.UserProfileRepository;
+import com.wordnik.swagger.annotations.Api;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import java.security.Principal;
 
 @Controller
 @RequestMapping("/rest/tracks")
+@Api(value="tracks")
 public class TrackController {
 
     private static Logger log = Logger.getLogger(TrackController.class);

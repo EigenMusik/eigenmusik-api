@@ -6,6 +6,7 @@ import com.eigenmusik.services.TrackRepository;
 import com.eigenmusik.services.UserService;
 import com.eigenmusik.services.sources.soundcloud.SoundcloudAccessTokenRepository;
 import com.eigenmusik.services.sources.soundcloud.SoundcloudService;
+import com.wordnik.swagger.annotations.Api;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import java.security.Principal;
 
 @RequestMapping("/rest/source/soundcloud")
 @Controller
+@Api(value="soundcloud")
 public class SoundcloudController {
 
     private static Logger log = Logger.getLogger(SoundcloudController.class);

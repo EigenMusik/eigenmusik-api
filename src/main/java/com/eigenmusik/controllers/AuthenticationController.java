@@ -6,6 +6,7 @@ import com.eigenmusik.exceptions.EmailExistsException;
 import com.eigenmusik.exceptions.UserDoesntExistException;
 import com.eigenmusik.exceptions.UsernameExistsException;
 import com.eigenmusik.services.UserService;
+import com.wordnik.swagger.annotations.Api;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import java.security.Principal;
 
 @RequestMapping("/auth")
 @Controller
+@Api(value="authentication")
 public class AuthenticationController {
 
     private static Logger log = Logger.getLogger(AuthenticationController.class);
@@ -27,7 +29,7 @@ public class AuthenticationController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping("/me")
+    @RequestMapping(value = "/me", method = RequestMethod.GET)
     public
     @ResponseBody
     ResponseEntity<?> getMe(Principal principal) {

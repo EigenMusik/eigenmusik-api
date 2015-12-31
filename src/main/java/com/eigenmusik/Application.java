@@ -47,7 +47,7 @@ public class Application extends SpringBootServletInitializer {
         return or(
                 regex("/auth.*"),
                 regex("/rest/tracks.*"),
-                regex("/rest/source/")
+                regex("/rest/source.*")
         );
 
     }

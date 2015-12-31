@@ -29,9 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class AuthenticationControllerTest extends IntegrationTestsBase {
 
-    private static Logger log = Logger.getLogger(AuthenticationControllerTest.class);
-
-
     @Autowired
     TrackRepository trackRepository;
 

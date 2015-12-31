@@ -21,13 +21,6 @@ public class SoundcloudUser {
     public SoundcloudUser() {
     }
 
-    public SoundcloudUser(Long id, String username, SoundcloudAccessToken accessToken, UserProfile createdBy) {
-        this.id = id;
-        this.username = username;
-        this.accessToken = accessToken;
-        this.createdBy = createdBy;
-    }
-
     public Long getId() {
         return id;
     }

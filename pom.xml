@@ -97,6 +97,12 @@
             <version>2.3.5.RELEASE</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -140,6 +146,9 @@
                             <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
                             <!-- Sets the output directory for the code coverage report. -->
                             <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
+                                <excludes>
+                                    <exclude>**/eigenmusik/config/**</exclude>
+                                </excludes>
                         </configuration>
                     </execution>
                 </executions>

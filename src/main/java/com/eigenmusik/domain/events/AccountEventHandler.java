@@ -24,11 +24,7 @@ public class AccountEventHandler {
         if (userProfile == null) {
             userProfile = new UserProfile(account);
             userProfile.setDisplayName(account.getName());
-            userProfile.setReputation(0);
-
             userProfileRepository.save(userProfile);
         }
-
     }
-
 }

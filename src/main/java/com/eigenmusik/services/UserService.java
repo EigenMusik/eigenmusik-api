@@ -38,14 +38,6 @@ public class UserService {
         return getUserProfileByAccount(account);
     }
 
-    private UserProfile getUserProfileByAccount(Account account) throws UserDoesntExistException {
-        UserProfile userProfile = userProfileRepository.findByAccount(account);
-        if (userProfile == null) {
-            throw new UserDoesntExistException();
-        }
-        return userProfile;
-    }
-
     public UserProfile getUserProfileByEmail(String email) throws UserDoesntExistException {
         Account account = accountRepository.findByEmail(email);
         if (account == null) {
@@ -65,11 +57,18 @@ public class UserService {
 
         UserProfile profile = new UserProfile(account);
         profile.setDisplayName(account.getName());
-        profile.setReputation(0);
 
         accountRepository.save(account);
         userProfileRepository.save(profile);
 
         return account;
+    }
+
+    private UserProfile getUserProfileByAccount(Account account) throws UserDoesntExistException {
+        UserProfile userProfile = userProfileRepository.findByAccount(account);
+        if (userProfile == null) {
+            throw new UserDoesntExistException();
+        }
+        return userProfile;
     }
 }

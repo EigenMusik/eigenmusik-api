@@ -82,6 +82,23 @@ public class UserServiceTest {
     }
 
     @Test
+    public void testGetUserProfileByEmail() throws UserDoesntExistException {
+        Account account = factory.manufacturePojo(Account.class);
+        UserProfile userProfile = factory.manufacturePojo(UserProfile.class);
+        when(accountRepository.findByEmail(account.getEmail())).thenReturn(account);
+        when(userProfileRepository.findByAccount(account)).thenReturn(userProfile);
+        assertEquals(userService.getUserProfileByEmail(account.getEmail()), userProfile);
+    }
+
+    @Test(expected=UserDoesntExistException.class)
+    public void testUserProfileNotExisting() throws UserDoesntExistException {
+        Account account = factory.manufacturePojo(Account.class);
+        when(accountRepository.findByEmail(account.getEmail())).thenReturn(account);
+        when(userProfileRepository.findByAccount(account)).thenReturn(null);
+        userService.getUserProfileByEmail(account.getEmail());
+    }
+
+    @Test
     public void testRegistration() throws EmailExistsException, UsernameExistsException {
         Account account = factory.manufacturePojo(Account.class);
         when(accountRepository.findByEmail(account.getEmail())).thenReturn(null);

@@ -15,8 +15,6 @@ public class UserProfile {
     private Account account;
 
     private String displayName;
-    private String gravatarUrl;
-    private int reputation;
 
     protected UserProfile() {
 
@@ -43,25 +41,12 @@ public class UserProfile {
         this.displayName = displayName;
     }
 
-    public String getGravatarUrl() {
-        return gravatarUrl;
-    }
-
-    public void setGravatarUrl(String gravatarUrl) {
-        this.gravatarUrl = gravatarUrl;
-    }
-
-    public int getReputation() {
-        return reputation;
-    }
-
-    public void setReputation(int reputation) {
-        this.reputation = reputation;
-    }
-
     @JsonIgnore
     public Account getAccount() {
         return account;
     }
 
+    public void setAccount(Account account) {
+        this.account = account;
+    }
 }

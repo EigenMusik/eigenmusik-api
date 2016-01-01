@@ -1,13 +1,17 @@
 package com.eigenmusik.services.sources.soundcloud;
 
-import com.eigenmusik.domain.Track;
+import com.eigenmusik.services.sources.soundcloud.entity.SoundcloudAccessToken;
+import com.eigenmusik.services.sources.soundcloud.entity.SoundcloudTrack;
+import com.eigenmusik.services.sources.soundcloud.entity.SoundcloudUser;
+import com.eigenmusik.services.sources.soundcloud.json.SoundcloudAccessTokenJson;
+import com.eigenmusik.services.sources.soundcloud.json.SoundcloudTrackJson;
+import com.eigenmusik.services.sources.soundcloud.json.SoundcloudUserJson;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -17,6 +21,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class SoundcloudGateway {
@@ -33,14 +38,16 @@ public class SoundcloudGateway {
     }
 
     public List<SoundcloudTrack> getTracks(SoundcloudUser user) throws IOException, HttpClientErrorException {
-        String requestUrl ="http://api.soundcloud.com/users/" + user.getId() + "/favorites?client_id=" + config.getClientId();
-        return Arrays.asList(restTemplate.getForEntity(requestUrl, SoundcloudTrack[].class).getBody());
+        String requestUrl ="http://api.soundcloud.com/users/" + user.getSoundcloudId() + "/favorites?client_id=" + config.getClientId();
+        return Arrays.asList(
+                restTemplate.getForEntity(requestUrl, SoundcloudTrackJson[].class).getBody()
+        ).stream().map(t -> new SoundcloudTrack(t, user)).collect(Collectors.toList());
     }
 
     public SoundcloudUser getMe(SoundcloudAccessToken token) throws HttpClientErrorException {
-        return restTemplate
-                .getForEntity("http://api.soundcloud.com/me?oauth_token=" + token.getAccessToken(), SoundcloudUser.class)
-                .getBody();
+        return new SoundcloudUser(restTemplate
+                .getForEntity("http://api.soundcloud.com/me?oauth_token=" + token.getAccessToken(), SoundcloudUserJson.class)
+                .getBody());
     }
 
     public SoundcloudAccessToken exchangeToken(String code) throws IOException, HttpClientErrorException {
@@ -58,14 +65,13 @@ public class SoundcloudGateway {
         String accessTokenString = restTemplate.postForObject("https://api.soundcloud.com/oauth2/token", entity, String.class);
         ObjectMapper mapper = new ObjectMapper();
 
-        return mapper.readValue(accessTokenString, SoundcloudAccessToken.class);
+        return new SoundcloudAccessToken(mapper.readValue(accessTokenString, SoundcloudAccessTokenJson.class));
     }
 
     public String getStreamUrl(SoundcloudTrack track) {
-        String requestUrl = "http://api.soundcloud.com/tracks/" + track.getId() + "?oauth_token=" + track.getUser().getAccessToken().getAccessToken();
-        log.info(requestUrl);
-        SoundcloudTrack soundcloudTrack = restTemplate.getForEntity(requestUrl, SoundcloudTrack.class).getBody();
-        return soundcloudTrack.getStreamUrl() + "?oauth_token=" + track.getUser().getAccessToken().getAccessToken();
+        String requestUrl = "http://api.soundcloud.com/tracks/" + track.getSoundcloudId() + "?oauth_token=" + track.getOwner().getAccessToken().getAccessToken();
+        SoundcloudTrackJson soundcloudTrackJson = restTemplate.getForEntity(requestUrl, SoundcloudTrackJson.class).getBody();
+        return soundcloudTrackJson.getStreamUrl() + "?oauth_token=" + track.getOwner().getAccessToken().getAccessToken();
     }
 
 }

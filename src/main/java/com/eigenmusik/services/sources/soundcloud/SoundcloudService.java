@@ -2,32 +2,29 @@ package com.eigenmusik.services.sources.soundcloud;
 
 import com.eigenmusik.domain.*;
 import com.eigenmusik.services.TrackRepository;
-import com.eigenmusik.services.UserService;
 import com.eigenmusik.services.sources.Source;
+import com.eigenmusik.services.sources.SourceService;
+import com.eigenmusik.services.sources.soundcloud.entity.SoundcloudAccessToken;
+import com.eigenmusik.services.sources.soundcloud.entity.SoundcloudTrack;
+import com.eigenmusik.services.sources.soundcloud.entity.SoundcloudUser;
+import com.eigenmusik.services.sources.soundcloud.repository.SoundcloudAccessTokenRepository;
+import com.eigenmusik.services.sources.soundcloud.repository.SoundcloudTrackRepository;
+import com.eigenmusik.services.sources.soundcloud.repository.SoundcloudUserRepository;
 import org.apache.log4j.Logger;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Component
 @ConfigurationProperties(prefix = "soundcloud")
-public class SoundcloudService {
+public class SoundcloudService implements SourceService {
 
     private static Logger log = Logger.getLogger(SoundcloudService.class);
     private SoundcloudGateway soundcloudGateway;
@@ -58,16 +55,18 @@ public class SoundcloudService {
             SoundcloudUser soundcloudUser = soundcloudGateway.getMe(accessToken);
             soundcloudUser.setCreatedBy(user);
             soundcloudUser.setAccessToken(accessToken);
+
             List<SoundcloudTrack> soundcloudTracks = soundcloudGateway.getTracks(soundcloudUser);
-            soundcloudTracks.forEach(t -> t.setUser(soundcloudUser));
+
             List<Track> tracks = soundcloudTracks.stream().map(t -> mapToTrack(t)).collect(Collectors.toList());
             tracks.forEach(track -> track.setCreatedBy(user));
-            tracks.forEach(track1 -> track1.setCreatedOn(Calendar.getInstance().getTime()));
+            tracks.forEach(track -> track.setCreatedOn(Calendar.getInstance().getTime()));
+
+            soundcloudAccessTokenRepository.save(accessToken);
+            soundcloudUserRepository.save(soundcloudUser);
 
             trackRepository.save(tracks);
-            soundcloudAccessTokenRepository.save(accessToken);
             soundcloudTrackRepository.save(soundcloudTracks);
-            soundcloudUserRepository.save(soundcloudUser);
 
             return true;
         } catch (IOException e) {
@@ -88,9 +87,8 @@ public class SoundcloudService {
     private Track mapToTrack(SoundcloudTrack t) {
         t.setTrack(new Track(
                 t.getTitle(),
-                new Artist(t.getUser().getUsername()),
+                new Artist(t.getArtist()),
                 new Album("An album"),
-                t.getId().toString(),
                 Source.SOUNDCLOUD,
                 12345678L));
         return t.getTrack();

@@ -4,6 +4,12 @@ import com.eigenmusik.domain.Track;
 import com.eigenmusik.domain.UserProfile;
 import com.eigenmusik.services.TrackRepository;
 import com.eigenmusik.services.sources.soundcloud.*;
+import com.eigenmusik.services.sources.soundcloud.entity.SoundcloudAccessToken;
+import com.eigenmusik.services.sources.soundcloud.entity.SoundcloudTrack;
+import com.eigenmusik.services.sources.soundcloud.entity.SoundcloudUser;
+import com.eigenmusik.services.sources.soundcloud.repository.SoundcloudAccessTokenRepository;
+import com.eigenmusik.services.sources.soundcloud.repository.SoundcloudTrackRepository;
+import com.eigenmusik.services.sources.soundcloud.repository.SoundcloudUserRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -28,6 +34,7 @@ public class SoundcloudServiceTest {
     private SoundcloudGateway soundcloudGateway;
     private SoundcloudUserRepository soundcloudUserRepository;
     private SoundcloudAccessTokenRepository soundcloudAccessTokenRepository;
+    private SoundcloudTrackRepository soundcloudTrackRepository;
     private TrackRepository trackRepository;
     private SoundcloudService soundcloudService;
 
@@ -38,7 +45,7 @@ public class SoundcloudServiceTest {
         soundcloudUserRepository = Mockito.mock(SoundcloudUserRepository.class);
         soundcloudAccessTokenRepository = Mockito.mock(SoundcloudAccessTokenRepository.class);
         trackRepository = Mockito.mock(TrackRepository.class);
-        soundcloudService = new SoundcloudService(soundcloudGateway, soundcloudAccessTokenRepository, soundcloudUserRepository, trackRepository);
+        soundcloudService = new SoundcloudService(soundcloudGateway, soundcloudAccessTokenRepository, soundcloudTrackRepository, soundcloudUserRepository, trackRepository);
 
     }
 

@@ -1,4 +1,4 @@
-package com.eigenmusik.services.sources.soundcloud;
+package com.eigenmusik.services.sources.soundcloud.json;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -10,13 +10,8 @@ import javax.persistence.Id;
 /**
  * Created by timcoulson on 26/12/2015.
  */
-@Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SoundcloudAccessToken {
-
-    @Id
-    @GeneratedValue
-    private Long id;
+public class SoundcloudAccessTokenJson {
 
     @JsonProperty("access_token")
     private String accessToken;
@@ -29,22 +24,6 @@ public class SoundcloudAccessToken {
 
     @JsonProperty("refresh_token")
     private String refreshToken;
-
-    public String getExpiresIn() {
-        return expiresIn;
-    }
-
-    public void setExpiresIn(String expiresIn) {
-        this.expiresIn = expiresIn;
-    }
-
-    public String getScope() {
-        return scope;
-    }
-
-    public void setScope(String scope) {
-        this.scope = scope;
-    }
 
     public String getRefreshToken() {
         return refreshToken;
@@ -60,5 +39,21 @@ public class SoundcloudAccessToken {
 
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
+    }
+
+    public String getExpiresIn() {
+        return expiresIn;
+    }
+
+    public void setExpiresIn(String expiresIn) {
+        this.expiresIn = expiresIn;
+    }
+
+    public String getScope() {
+        return scope;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
     }
 }

@@ -15,6 +15,7 @@ import java.net.URISyntaxException;
 @Profile({ "prod", "dev" })
 public class DatabaseConfigurer {
 
+
     private String url;
 
     public void setUrl(String url) {

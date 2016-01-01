@@ -58,6 +58,8 @@ public class UserService {
         UserProfile profile = new UserProfile(account);
         profile.setDisplayName(account.getName());
 
+        account.setActive(true);
+
         accountRepository.save(account);
         userProfileRepository.save(profile);
 

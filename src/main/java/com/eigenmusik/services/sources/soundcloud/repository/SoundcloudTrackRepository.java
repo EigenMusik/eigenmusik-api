@@ -1,6 +1,7 @@
-package com.eigenmusik.services.sources.soundcloud;
+package com.eigenmusik.services.sources.soundcloud.repository;
 
 import com.eigenmusik.domain.Track;
+import com.eigenmusik.services.sources.soundcloud.entity.SoundcloudTrack;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

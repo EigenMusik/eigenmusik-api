@@ -56,7 +56,6 @@ public class TrackController {
     StreamUrl getStreamUrl(@PathVariable Long trackId, Principal principal, Pageable pageable) {
         Track track = trackRepository.findOne(trackId);
         return streamService.getStream(track);
-
     }
 
 }

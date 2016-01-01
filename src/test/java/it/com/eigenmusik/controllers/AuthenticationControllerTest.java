@@ -1,25 +1,19 @@
 package it.com.eigenmusik.controllers;
 
-import com.eigenmusik.controllers.AuthenticationController;
 import com.eigenmusik.domain.Account;
 import com.eigenmusik.domain.Track;
-import com.eigenmusik.domain.UserProfile;
 import com.eigenmusik.services.AccountRepository;
 import com.eigenmusik.services.TrackRepository;
 import com.eigenmusik.services.UserProfileRepository;
-import com.eigenmusik.services.sources.soundcloud.SoundcloudAccessToken;
 import it.com.eigenmusik.IntegrationTestsBase;
-import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;

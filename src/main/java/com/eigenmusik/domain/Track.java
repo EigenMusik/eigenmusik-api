@@ -12,7 +12,6 @@ public class Track {
     @GeneratedValue
     private Long id;
     private String name;
-    private String uri;
     private Source source;
     private Date createdOn;
     @ManyToOne(optional = true, fetch = FetchType.EAGER)
@@ -27,10 +26,9 @@ public class Track {
 
     }
 
-    public Track(String name, Artist artist, Album album, String uri, Source source, Long durationMs) {
+    public Track(String name, Artist artist, Album album, Source source, Long durationMs) {
         this.name = name;
         this.artist = artist;
-        this.uri = uri;
         this.source = source;
         this.album = album;
         this.durationMs = durationMs;
@@ -66,10 +64,6 @@ public class Track {
 
     public Album getAlbum() {
         return album;
-    }
-
-    public String getUri() {
-        return uri;
     }
 
     public Long getDuration() {

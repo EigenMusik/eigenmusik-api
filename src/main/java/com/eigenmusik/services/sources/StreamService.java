@@ -17,17 +17,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class StreamService {
 
-    private SoundcloudService soundcloudService;
-
     @Autowired
-    public StreamService(SoundcloudService soundcloudService) {
-        this.soundcloudService = soundcloudService;
-    }
+    SourceServiceFactory sourceServiceFactory;
 
     public StreamUrl getStream(Track track) {
-        if (track.getSource().equals(Source.SOUNDCLOUD)) {
-            return soundcloudService.getStreamUrl(track);
-        }
-        return null;
+        SourceService sourceService = sourceServiceFactory.build(track.getSource());
+
+        return sourceService.getStreamUrl(track);
     }
 }

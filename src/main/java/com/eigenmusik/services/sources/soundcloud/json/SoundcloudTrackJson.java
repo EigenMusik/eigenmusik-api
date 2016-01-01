@@ -1,35 +1,21 @@
-package com.eigenmusik.services.sources.soundcloud;
+package com.eigenmusik.services.sources.soundcloud.json;
 
 /**
  * Created by timcoulson on 15/12/2015.
  */
 
-import com.eigenmusik.domain.Track;
+import com.eigenmusik.services.sources.soundcloud.entity.SoundcloudUser;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
-import org.codehaus.jackson.map.ObjectMapper;
 
-import javax.persistence.*;
-import java.io.IOException;
-
-@Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SoundcloudTrack {
+public class SoundcloudTrackJson {
 
-    @Id
     private Long id;
     private String title;
-    @ManyToOne(optional = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private SoundcloudUser user;
     @JsonProperty(value = "stream_url")
     private String streamUrl;
-
-    @OneToOne(optional = false, fetch = FetchType.EAGER)
-    private Track track;
-
-    public SoundcloudTrack() {
-    }
 
     public Long getId() {
         return id;
@@ -61,24 +47,6 @@ public class SoundcloudTrack {
 
     public void setStreamUrl(String streamUrl) {
         this.streamUrl = streamUrl;
-    }
-
-    public Track getTrack() {
-        return track;
-    }
-
-    public void setTrack(Track track) {
-        this.track = track;
-    }
-
-    @Override
-    public String toString() {
-        try {
-            return new ObjectMapper().writeValueAsString(this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
 }

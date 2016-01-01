@@ -1,6 +1,9 @@
 package ut.com.eigenmusik.services.sources.soundcloud;
 
 import com.eigenmusik.services.sources.soundcloud.*;
+import com.eigenmusik.services.sources.soundcloud.entity.SoundcloudAccessToken;
+import com.eigenmusik.services.sources.soundcloud.entity.SoundcloudTrack;
+import com.eigenmusik.services.sources.soundcloud.entity.SoundcloudUser;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;

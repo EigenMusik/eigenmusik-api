@@ -4,7 +4,7 @@ import com.eigenmusik.domain.UserProfile;
 import com.eigenmusik.exceptions.UserDoesntExistException;
 import com.eigenmusik.services.TrackRepository;
 import com.eigenmusik.services.UserService;
-import com.eigenmusik.services.sources.soundcloud.SoundcloudAccessTokenRepository;
+import com.eigenmusik.services.sources.soundcloud.repository.SoundcloudAccessTokenRepository;
 import com.eigenmusik.services.sources.soundcloud.SoundcloudService;
 import com.wordnik.swagger.annotations.Api;
 import org.apache.log4j.Logger;

@@ -2,6 +2,7 @@ package it.com.eigenmusik;
 
 import com.eigenmusik.domain.Track;
 import com.eigenmusik.services.TrackRepository;
+import com.eigenmusik.services.sources.Source;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class OAuthTokenTests extends IntegrationTestsBase {
 
     @Before
     public void Setup() {
-        Track track = new Track("TrackName", null, null, "TrackType", "12345", 12345L);
+        Track track = new Track("TrackName", null, null, "TrackType", Source.SOUNDCLOUD, 12345L);
         track.setId(1L);
         track.setCreatedBy(null);
 

@@ -1,11 +1,9 @@
 package com.eigenmusik.services.sources.soundcloud;
 
-import com.eigenmusik.domain.Album;
-import com.eigenmusik.domain.Artist;
-import com.eigenmusik.domain.Track;
-import com.eigenmusik.domain.UserProfile;
+import com.eigenmusik.domain.*;
 import com.eigenmusik.services.TrackRepository;
 import com.eigenmusik.services.UserService;
+import com.eigenmusik.services.sources.Source;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +23,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 @ConfigurationProperties(prefix = "soundcloud")
@@ -34,16 +33,19 @@ public class SoundcloudService {
     private SoundcloudGateway soundcloudGateway;
     private SoundcloudAccessTokenRepository soundcloudAccessTokenRepository;
     private SoundcloudUserRepository soundcloudUserRepository;
+    private SoundcloudTrackRepository soundcloudTrackRepository;
     private TrackRepository trackRepository;
 
     @Autowired
     public SoundcloudService(
             SoundcloudGateway soundcloudGateway,
             SoundcloudAccessTokenRepository soundcloudAccessTokenRepository,
+            SoundcloudTrackRepository soundcloudTrackRepository,
             SoundcloudUserRepository soundcloudUserRepository,
             TrackRepository trackRepository) {
         this.soundcloudGateway = soundcloudGateway;
         this.soundcloudAccessTokenRepository = soundcloudAccessTokenRepository;
+        this.soundcloudTrackRepository = soundcloudTrackRepository;
         this.soundcloudUserRepository = soundcloudUserRepository;
         this.trackRepository = trackRepository;
     }
@@ -56,12 +58,17 @@ public class SoundcloudService {
             SoundcloudUser soundcloudUser = soundcloudGateway.getMe(accessToken);
             soundcloudUser.setCreatedBy(user);
             soundcloudUser.setAccessToken(accessToken);
-            List<Track> tracks = soundcloudGateway.getTracks(soundcloudUser).stream().map(t -> mapToTrack(t)).collect(Collectors.toList());
+            List<SoundcloudTrack> soundcloudTracks = soundcloudGateway.getTracks(soundcloudUser);
+            soundcloudTracks.forEach(t -> t.setUser(soundcloudUser));
+            List<Track> tracks = soundcloudTracks.stream().map(t -> mapToTrack(t)).collect(Collectors.toList());
             tracks.forEach(track -> track.setCreatedBy(user));
             tracks.forEach(track1 -> track1.setCreatedOn(Calendar.getInstance().getTime()));
-            soundcloudAccessTokenRepository.save(accessToken);
-            soundcloudUserRepository.save(soundcloudUser);
+
             trackRepository.save(tracks);
+            soundcloudAccessTokenRepository.save(accessToken);
+            soundcloudTrackRepository.save(soundcloudTracks);
+            soundcloudUserRepository.save(soundcloudUser);
+
             return true;
         } catch (IOException e) {
             log.error(e.getMessage());
@@ -72,14 +79,21 @@ public class SoundcloudService {
         }
     }
 
+    public StreamUrl getStreamUrl(Track track) {
+        SoundcloudTrack soundcloudTrack = soundcloudTrackRepository.findByTrack(track);
+        return new StreamUrl(soundcloudGateway.getStreamUrl(soundcloudTrack));
+    }
+
+    // TODO should be bind?
     private Track mapToTrack(SoundcloudTrack t) {
-        return new Track(
+        t.setTrack(new Track(
                 t.getTitle(),
                 new Artist(t.getUser().getUsername()),
                 new Album("An album"),
                 t.getId().toString(),
-                "SOUNDCLOUD",
-                12345678L);
+                Source.SOUNDCLOUD,
+                12345678L));
+        return t.getTrack();
     }
 
 }

@@ -1,5 +1,6 @@
 package com.eigenmusik.services.sources.soundcloud;
 
+import com.eigenmusik.domain.Track;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,13 @@ public class SoundcloudGateway {
         ObjectMapper mapper = new ObjectMapper();
 
         return mapper.readValue(accessTokenString, SoundcloudAccessToken.class);
+    }
+
+    public String getStreamUrl(SoundcloudTrack track) {
+        String requestUrl = "http://api.soundcloud.com/tracks/" + track.getId() + "?oauth_token=" + track.getUser().getAccessToken().getAccessToken();
+        log.info(requestUrl);
+        SoundcloudTrack soundcloudTrack = restTemplate.getForEntity(requestUrl, SoundcloudTrack.class).getBody();
+        return soundcloudTrack.getStreamUrl() + "?oauth_token=" + track.getUser().getAccessToken().getAccessToken();
     }
 
 }

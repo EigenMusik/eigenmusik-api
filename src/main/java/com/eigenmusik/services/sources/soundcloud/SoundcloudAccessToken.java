@@ -59,7 +59,6 @@ public class SoundcloudAccessToken {
     }
 
     public void setAccessToken(String accessToken) {
-
         this.accessToken = accessToken;
     }
 }

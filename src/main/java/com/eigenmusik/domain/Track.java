@@ -1,5 +1,7 @@
 package com.eigenmusik.domain;
 
+import com.eigenmusik.services.sources.Source;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -11,7 +13,7 @@ public class Track {
     private Long id;
     private String name;
     private String uri;
-    private String type;
+    private Source source;
     private Date createdOn;
     @ManyToOne(optional = true, fetch = FetchType.EAGER)
     private UserProfile createdBy;
@@ -25,13 +27,17 @@ public class Track {
 
     }
 
-    public Track(String name, Artist artist, Album album, String uri, String type, Long durationMs) {
+    public Track(String name, Artist artist, Album album, String uri, Source source, Long durationMs) {
         this.name = name;
         this.artist = artist;
         this.uri = uri;
-        this.type = type;
+        this.source = source;
         this.album = album;
         this.durationMs = durationMs;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public void setId(Long id) {
@@ -70,8 +76,8 @@ public class Track {
         return durationMs;
     }
 
-    public String getType() {
-        return type;
+    public Source getSource() {
+        return source;
     }
 
     public Date getCreatedOn() {

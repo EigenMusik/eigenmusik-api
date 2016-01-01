@@ -2,6 +2,7 @@ package com.eigenmusik.config;
 
 import com.eigenmusik.domain.Account;
 import com.eigenmusik.domain.AccountValidator;
+import com.eigenmusik.domain.Track;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +25,7 @@ public class RestConfiguration extends RepositoryRestMvcConfiguration {
         try {
             config.setBaseUri(new URI("/rest"));
             config.exposeIdsFor(Account.class);
+            config.exposeIdsFor(Track.class);
         } catch (URISyntaxException e) {
             logger.error("failed to set base uri", e);
         }

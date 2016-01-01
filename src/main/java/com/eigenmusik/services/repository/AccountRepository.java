@@ -1,4 +1,4 @@
-package com.eigenmusik.services;
+package com.eigenmusik.services.repository;
 
 import com.eigenmusik.domain.Account;
 import org.springframework.data.repository.CrudRepository;

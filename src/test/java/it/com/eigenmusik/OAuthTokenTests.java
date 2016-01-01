@@ -1,7 +1,7 @@
 package it.com.eigenmusik;
 
 import com.eigenmusik.domain.Track;
-import com.eigenmusik.services.TrackRepository;
+import com.eigenmusik.services.repository.TrackRepository;
 import com.eigenmusik.services.sources.Source;
 import org.junit.Before;
 import org.junit.Test;

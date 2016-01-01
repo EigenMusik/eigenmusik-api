@@ -1,7 +1,6 @@
 package com.eigenmusik.config;
 
 import com.eigenmusik.domain.Account;
-import com.eigenmusik.domain.AccountValidator;
 import com.eigenmusik.domain.Track;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Bean;

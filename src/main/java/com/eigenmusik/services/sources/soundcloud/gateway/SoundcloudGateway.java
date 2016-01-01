@@ -1,5 +1,6 @@
-package com.eigenmusik.services.sources.soundcloud;
+package com.eigenmusik.services.sources.soundcloud.gateway;
 
+import com.eigenmusik.services.sources.soundcloud.config.SoundcloudConfiguration;
 import com.eigenmusik.services.sources.soundcloud.entity.SoundcloudAccessToken;
 import com.eigenmusik.services.sources.soundcloud.entity.SoundcloudTrack;
 import com.eigenmusik.services.sources.soundcloud.entity.SoundcloudUser;
@@ -28,7 +29,7 @@ public class SoundcloudGateway {
 
     private static Logger log = Logger.getLogger(SoundcloudGateway.class);
     private final SoundcloudConfiguration config;
-
+    private final String REST_API = "http://api.soundcloud.com";
     private RestTemplate restTemplate;
 
     @Autowired
@@ -38,7 +39,7 @@ public class SoundcloudGateway {
     }
 
     public List<SoundcloudTrack> getTracks(SoundcloudUser user) throws IOException, HttpClientErrorException {
-        String requestUrl ="http://api.soundcloud.com/users/" + user.getSoundcloudId() + "/favorites?client_id=" + config.getClientId();
+        String requestUrl = REST_API + "/users/" + user.getSoundcloudId() + "/favorites?client_id=" + config.getClientId();
         return Arrays.asList(
                 restTemplate.getForEntity(requestUrl, SoundcloudTrackJson[].class).getBody()
         ).stream().map(t -> new SoundcloudTrack(t, user)).collect(Collectors.toList());
@@ -46,7 +47,7 @@ public class SoundcloudGateway {
 
     public SoundcloudUser getMe(SoundcloudAccessToken token) throws HttpClientErrorException {
         return new SoundcloudUser(restTemplate
-                .getForEntity("http://api.soundcloud.com/me?oauth_token=" + token.getAccessToken(), SoundcloudUserJson.class)
+                .getForEntity(REST_API + "/me?oauth_token=" + token.getAccessToken(), SoundcloudUserJson.class)
                 .getBody());
     }
 
@@ -62,16 +63,17 @@ public class SoundcloudGateway {
         bodyMap.add("code", code);
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<MultiValueMap<String, String>>(bodyMap, headers);
-        String accessTokenString = restTemplate.postForObject("https://api.soundcloud.com/oauth2/token", entity, String.class);
+        String accessTokenString = restTemplate.postForObject(REST_API + "/oauth2/token", entity, String.class);
         ObjectMapper mapper = new ObjectMapper();
 
         return new SoundcloudAccessToken(mapper.readValue(accessTokenString, SoundcloudAccessTokenJson.class));
     }
 
-    public String getStreamUrl(SoundcloudTrack track) {
-        String requestUrl = "http://api.soundcloud.com/tracks/" + track.getSoundcloudId() + "?oauth_token=" + track.getOwner().getAccessToken().getAccessToken();
+    public String getStreamUrl(Long soundcloudId, SoundcloudAccessToken accessToken) {
+        String requestUrl = REST_API + "/tracks/" + soundcloudId + "?oauth_token=" + accessToken.getAccessToken();
+        log.info("Request url = " + requestUrl);
         SoundcloudTrackJson soundcloudTrackJson = restTemplate.getForEntity(requestUrl, SoundcloudTrackJson.class).getBody();
-        return soundcloudTrackJson.getStreamUrl() + "?oauth_token=" + track.getOwner().getAccessToken().getAccessToken();
+        return soundcloudTrackJson.getStreamUrl() + "?oauth_token=" + accessToken.getAccessToken();
     }
 
 }

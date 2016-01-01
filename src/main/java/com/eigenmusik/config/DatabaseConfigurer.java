@@ -12,7 +12,7 @@ import java.net.URISyntaxException;
 
 @Configuration
 @ConfigurationProperties(prefix = "spring.datasource")
-@Profile({ "prod", "dev" })
+@Profile({"prod", "dev"})
 public class DatabaseConfigurer {
 
 

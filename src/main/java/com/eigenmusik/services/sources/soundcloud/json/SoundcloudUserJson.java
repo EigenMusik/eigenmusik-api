@@ -1,6 +1,5 @@
 package com.eigenmusik.services.sources.soundcloud.json;
 
-import com.eigenmusik.services.sources.soundcloud.entity.SoundcloudAccessToken;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

@@ -3,10 +3,6 @@ package com.eigenmusik.services.sources.soundcloud.json;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-
 /**
  * Created by timcoulson on 26/12/2015.
  */

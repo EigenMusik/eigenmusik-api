@@ -1,7 +1,5 @@
 package com.eigenmusik.domain;
 
-import org.codehaus.jackson.map.ObjectMapper;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

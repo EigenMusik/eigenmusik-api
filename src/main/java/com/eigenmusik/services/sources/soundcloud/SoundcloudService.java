@@ -1,25 +1,25 @@
 package com.eigenmusik.services.sources.soundcloud;
 
-import com.eigenmusik.domain.*;
-import com.eigenmusik.services.TrackRepository;
+import com.eigenmusik.domain.StreamUrl;
+import com.eigenmusik.domain.Track;
 import com.eigenmusik.services.sources.Source;
 import com.eigenmusik.services.sources.SourceService;
+import com.eigenmusik.services.sources.TrackSource;
+import com.eigenmusik.services.sources.entity.SourceAccount;
 import com.eigenmusik.services.sources.soundcloud.entity.SoundcloudAccessToken;
 import com.eigenmusik.services.sources.soundcloud.entity.SoundcloudTrack;
 import com.eigenmusik.services.sources.soundcloud.entity.SoundcloudUser;
+import com.eigenmusik.services.sources.soundcloud.gateway.SoundcloudGateway;
 import com.eigenmusik.services.sources.soundcloud.repository.SoundcloudAccessTokenRepository;
-import com.eigenmusik.services.sources.soundcloud.repository.SoundcloudTrackRepository;
 import com.eigenmusik.services.sources.soundcloud.repository.SoundcloudUserRepository;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.io.IOException;
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 @Component
@@ -30,68 +30,68 @@ public class SoundcloudService implements SourceService {
     private SoundcloudGateway soundcloudGateway;
     private SoundcloudAccessTokenRepository soundcloudAccessTokenRepository;
     private SoundcloudUserRepository soundcloudUserRepository;
-    private SoundcloudTrackRepository soundcloudTrackRepository;
-    private TrackRepository trackRepository;
 
     @Autowired
     public SoundcloudService(
             SoundcloudGateway soundcloudGateway,
             SoundcloudAccessTokenRepository soundcloudAccessTokenRepository,
-            SoundcloudTrackRepository soundcloudTrackRepository,
-            SoundcloudUserRepository soundcloudUserRepository,
-            TrackRepository trackRepository) {
+            SoundcloudUserRepository soundcloudUserRepository) {
         this.soundcloudGateway = soundcloudGateway;
         this.soundcloudAccessTokenRepository = soundcloudAccessTokenRepository;
-        this.soundcloudTrackRepository = soundcloudTrackRepository;
         this.soundcloudUserRepository = soundcloudUserRepository;
-        this.trackRepository = trackRepository;
     }
 
-    public boolean connectAccount(String code, UserProfile user) {
-        SoundcloudAccessToken accessToken;
+    public SourceAccount getAccount(String authCode) {
+
         try {
-            accessToken = soundcloudGateway.exchangeToken(code);
-            // Get user entity from soundcloud.
-            SoundcloudUser soundcloudUser = soundcloudGateway.getMe(accessToken);
-            soundcloudUser.setCreatedBy(user);
-            soundcloudUser.setAccessToken(accessToken);
+            SoundcloudAccessToken soundcloudAccessToken = soundcloudGateway.exchangeToken(authCode);
+            SoundcloudUser soundcloudUser = soundcloudGateway.getMe(soundcloudAccessToken);
+            soundcloudUser.setAccessToken(soundcloudAccessToken);
 
-            List<SoundcloudTrack> soundcloudTracks = soundcloudGateway.getTracks(soundcloudUser);
-
-            List<Track> tracks = soundcloudTracks.stream().map(t -> mapToTrack(t)).collect(Collectors.toList());
-            tracks.forEach(track -> track.setCreatedBy(user));
-            tracks.forEach(track -> track.setCreatedOn(Calendar.getInstance().getTime()));
-
-            soundcloudAccessTokenRepository.save(accessToken);
+            soundcloudAccessTokenRepository.save(soundcloudAccessToken);
             soundcloudUserRepository.save(soundcloudUser);
 
-            trackRepository.save(tracks);
-            soundcloudTrackRepository.save(soundcloudTracks);
-
-            return true;
+            SourceAccount account = new SourceAccount();
+            account.setUri(soundcloudUser.getId());
+            account.setSource(Source.SOUNDCLOUD);
+            return account;
         } catch (IOException e) {
-            log.error(e.getMessage());
-            return false;
-        } catch (HttpClientErrorException e) {
-            log.error(e.getMessage());
-            return false;
+            e.printStackTrace();
         }
+        return null;
+    }
+
+    public List<Track> getTracks(SourceAccount account) {
+        List<Track> tracks = new ArrayList<>();
+        SoundcloudUser soundcloudUser = soundcloudUserRepository.findOne(account.getUri());
+        try {
+            List<SoundcloudTrack> soundcloudTracks = soundcloudGateway.getTracks(soundcloudUser);
+
+            tracks = soundcloudTracks.stream().map(t -> mapToTrack(t, account)).collect(Collectors.toList());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return tracks;
     }
 
     public StreamUrl getStreamUrl(Track track) {
-        SoundcloudTrack soundcloudTrack = soundcloudTrackRepository.findByTrack(track);
-        return new StreamUrl(soundcloudGateway.getStreamUrl(soundcloudTrack));
+        log.info(track.getTrackSource().getOwner().getUri());
+        SoundcloudUser soundcloudUser = soundcloudUserRepository.findOne(track.getTrackSource().getOwner().getUri());
+        return new StreamUrl(soundcloudGateway.getStreamUrl(track.getTrackSource().getUri(), soundcloudUser.getAccessToken()));
     }
 
-    // TODO should be bind?
-    private Track mapToTrack(SoundcloudTrack t) {
-        t.setTrack(new Track(
-                t.getTitle(),
-                new Artist(t.getArtist()),
-                new Album("An album"),
-                Source.SOUNDCLOUD,
-                12345678L));
-        return t.getTrack();
+    // TODO where should this live?
+    private Track mapToTrack(SoundcloudTrack t, SourceAccount account) {
+        TrackSource trackSource = new TrackSource();
+        trackSource.setUri(t.getSoundcloudId());
+        trackSource.setSource(Source.SOUNDCLOUD);
+        trackSource.setOwner(account);
+
+        Track track = new Track();
+        track.setName(t.getTitle());
+        track.setArtist(t.getArtist());
+        track.setTrackSource(trackSource);
+        return track;
     }
 
 }

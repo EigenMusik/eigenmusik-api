@@ -1,7 +1,6 @@
 package com.eigenmusik.controllers;
 
 import com.eigenmusik.domain.Account;
-import com.eigenmusik.domain.UserProfile;
 import com.eigenmusik.exceptions.EmailExistsException;
 import com.eigenmusik.exceptions.UserDoesntExistException;
 import com.eigenmusik.exceptions.UsernameExistsException;
@@ -21,7 +20,7 @@ import java.security.Principal;
 
 @RequestMapping("/auth")
 @Controller
-@Api(value="authentication")
+@Api(value = "authentication")
 public class AuthenticationController {
 
     private static Logger log = Logger.getLogger(AuthenticationController.class);

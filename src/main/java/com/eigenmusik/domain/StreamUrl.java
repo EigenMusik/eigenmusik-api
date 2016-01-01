@@ -5,6 +5,7 @@ package com.eigenmusik.domain;
  */
 public class StreamUrl {
     private String streamUrl;
+
     public StreamUrl(String streamUrl) {
         this.streamUrl = streamUrl;
     }

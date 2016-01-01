@@ -1,38 +1,28 @@
 package com.eigenmusik.domain;
 
-import com.eigenmusik.services.sources.Source;
+import com.eigenmusik.services.sources.TrackSource;
+import org.codehaus.jackson.annotate.JsonAutoDetect;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+@JsonAutoDetect
 public class Track {
 
     @Id
     @GeneratedValue
     private Long id;
     private String name;
-    private Source source;
-    private Date createdOn;
+    private String artist;
+    // TODO populate these with real data.
+    private Long duration = 12345L;
+    private String album = "An album";
+    private Date createdOn = new Date();
+    @OneToOne(optional = false, fetch = FetchType.EAGER)
+    private TrackSource trackSource;
     @ManyToOne(optional = true, fetch = FetchType.EAGER)
     private UserProfile createdBy;
-    @ManyToOne(optional = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Artist artist;
-    @ManyToOne(optional = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Album album;
-    private Long durationMs;
-
-    public Track() {
-
-    }
-
-    public Track(String name, Artist artist, Album album, Source source, Long durationMs) {
-        this.name = name;
-        this.artist = artist;
-        this.source = source;
-        this.album = album;
-        this.durationMs = durationMs;
-    }
 
     public Long getId() {
         return id;
@@ -50,10 +40,6 @@ public class Track {
         this.name = name;
     }
 
-    public Artist getArtist() {
-        return artist;
-    }
-
     public UserProfile getCreatedBy() {
         return createdBy;
     }
@@ -62,16 +48,12 @@ public class Track {
         this.createdBy = createdBy;
     }
 
-    public Album getAlbum() {
-        return album;
+    public TrackSource getTrackSource() {
+        return trackSource;
     }
 
-    public Long getDuration() {
-        return durationMs;
-    }
-
-    public Source getSource() {
-        return source;
+    public void setTrackSource(TrackSource trackSource) {
+        this.trackSource = trackSource;
     }
 
     public Date getCreatedOn() {
@@ -82,4 +64,27 @@ public class Track {
         this.createdOn = createdOn;
     }
 
+    public String getArtist() {
+        return artist;
+    }
+
+    public void setArtist(String artist) {
+        this.artist = artist;
+    }
+
+    public Long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Long duration) {
+        this.duration = duration;
+    }
+
+    public String getAlbum() {
+        return album;
+    }
+
+    public void setAlbum(String album) {
+        this.album = album;
+    }
 }

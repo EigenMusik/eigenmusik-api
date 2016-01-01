@@ -2,9 +2,9 @@ package it.com.eigenmusik.controllers;
 
 import com.eigenmusik.domain.Account;
 import com.eigenmusik.domain.Track;
-import com.eigenmusik.services.AccountRepository;
-import com.eigenmusik.services.TrackRepository;
-import com.eigenmusik.services.UserProfileRepository;
+import com.eigenmusik.services.repository.AccountRepository;
+import com.eigenmusik.services.repository.TrackRepository;
+import com.eigenmusik.services.repository.UserProfileRepository;
 import it.com.eigenmusik.IntegrationTestsBase;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;

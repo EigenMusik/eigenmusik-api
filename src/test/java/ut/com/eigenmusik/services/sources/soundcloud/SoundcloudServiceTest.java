@@ -2,13 +2,13 @@ package ut.com.eigenmusik.services.sources.soundcloud;
 
 import com.eigenmusik.domain.Track;
 import com.eigenmusik.domain.UserProfile;
-import com.eigenmusik.services.TrackRepository;
+import com.eigenmusik.services.repository.TrackRepository;
 import com.eigenmusik.services.sources.soundcloud.*;
 import com.eigenmusik.services.sources.soundcloud.entity.SoundcloudAccessToken;
 import com.eigenmusik.services.sources.soundcloud.entity.SoundcloudTrack;
 import com.eigenmusik.services.sources.soundcloud.entity.SoundcloudUser;
+import com.eigenmusik.services.sources.soundcloud.gateway.SoundcloudGateway;
 import com.eigenmusik.services.sources.soundcloud.repository.SoundcloudAccessTokenRepository;
-import com.eigenmusik.services.sources.soundcloud.repository.SoundcloudTrackRepository;
 import com.eigenmusik.services.sources.soundcloud.repository.SoundcloudUserRepository;
 import org.junit.Before;
 import org.junit.Test;

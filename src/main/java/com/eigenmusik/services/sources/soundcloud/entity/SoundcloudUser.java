@@ -1,9 +1,6 @@
 package com.eigenmusik.services.sources.soundcloud.entity;
 
-import com.eigenmusik.domain.UserProfile;
-import com.eigenmusik.services.sources.soundcloud.entity.SoundcloudAccessToken;
 import com.eigenmusik.services.sources.soundcloud.json.SoundcloudUserJson;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 
@@ -15,10 +12,8 @@ public class SoundcloudUser {
     private Long id;
     private Long soundcloudId;
     private String username;
-    @OneToOne(optional = true, fetch = FetchType.LAZY)
+    @OneToOne(optional = true, fetch = FetchType.EAGER)
     private SoundcloudAccessToken accessToken;
-    @ManyToOne(optional = true, fetch = FetchType.EAGER)
-    private UserProfile createdBy;
 
     public SoundcloudUser() {
     }
@@ -52,15 +47,6 @@ public class SoundcloudUser {
     public void setAccessToken(SoundcloudAccessToken accessToken) {
         this.accessToken = accessToken;
     }
-
-    public UserProfile getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(UserProfile createdBy) {
-        this.createdBy = createdBy;
-    }
-
 
     public Long getSoundcloudId() {
         return soundcloudId;

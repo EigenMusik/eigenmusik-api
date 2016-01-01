@@ -2,7 +2,7 @@ package com.eigenmusik.domain.events;
 
 import com.eigenmusik.domain.Account;
 import com.eigenmusik.domain.UserProfile;
-import com.eigenmusik.services.UserProfileRepository;
+import com.eigenmusik.services.repository.UserProfileRepository;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

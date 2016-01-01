@@ -3,12 +3,12 @@ package com.eigenmusik.services;
 import com.eigenmusik.domain.Account;
 import com.eigenmusik.domain.UserProfile;
 import com.eigenmusik.exceptions.EmailExistsException;
-import com.eigenmusik.exceptions.UsernameExistsException;
 import com.eigenmusik.exceptions.UserDoesntExistException;
+import com.eigenmusik.exceptions.UsernameExistsException;
+import com.eigenmusik.services.repository.AccountRepository;
+import com.eigenmusik.services.repository.UserProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.security.Principal;
 
 /**
  * Created by timcoulson on 24/12/2015.

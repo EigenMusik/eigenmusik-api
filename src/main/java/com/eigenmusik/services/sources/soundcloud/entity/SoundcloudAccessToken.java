@@ -1,8 +1,6 @@
 package com.eigenmusik.services.sources.soundcloud.entity;
 
 import com.eigenmusik.services.sources.soundcloud.json.SoundcloudAccessTokenJson;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

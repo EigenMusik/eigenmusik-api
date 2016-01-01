@@ -5,39 +5,23 @@ import com.eigenmusik.domain.UserProfile;
 import com.eigenmusik.exceptions.EmailExistsException;
 import com.eigenmusik.exceptions.UserDoesntExistException;
 import com.eigenmusik.exceptions.UsernameExistsException;
-import com.eigenmusik.services.AccountRepository;
-import com.eigenmusik.services.TrackRepository;
-import com.eigenmusik.services.UserProfileRepository;
+import com.eigenmusik.services.repository.AccountRepository;
+import com.eigenmusik.services.repository.UserProfileRepository;
 import com.eigenmusik.services.UserService;
-import com.eigenmusik.services.sources.soundcloud.*;
-import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.client.MockRestServiceServer;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.security.Principal;
-import java.util.List;
 
-import static org.hamcrest.Matchers.any;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 
 /**
  * Created by timcoulson on 27/12/2015.

@@ -7,29 +7,15 @@ package com.eigenmusik.services.sources.soundcloud.entity;
 import com.eigenmusik.domain.Track;
 import com.eigenmusik.services.sources.soundcloud.json.SoundcloudTrackJson;
 
-import javax.persistence.*;
-
-@Entity
 public class SoundcloudTrack {
 
-    @Id
-    @GeneratedValue
     private Long id;
-    @Transient
     private String streamUrl;
-    @Transient
     private String title;
-    @Transient
     private String artist;
     private Long soundcloudId;
-    @OneToOne(optional = false, fetch = FetchType.EAGER)
     private Track track;
-    @ManyToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private SoundcloudUser owner;
-
-    public SoundcloudTrack() {
-
-    }
 
     public SoundcloudTrack(SoundcloudTrackJson response, SoundcloudUser owner) {
         this.streamUrl = response.getStreamUrl();

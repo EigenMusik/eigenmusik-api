@@ -1,8 +1,5 @@
 package com.eigenmusik.exceptions;
 
-/**
- * Created by timcoulson on 24/12/2015.
- */
 public class UsernameExistsException extends Exception {
 
     @Override

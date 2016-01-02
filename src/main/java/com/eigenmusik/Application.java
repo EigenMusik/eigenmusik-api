@@ -18,7 +18,7 @@ import static springfox.documentation.builders.PathSelectors.regex;
 
 @EnableAutoConfiguration
 @Configuration
-@EnableSwagger2 //Enable swagger 2.0 spec
+@EnableSwagger2
 @ComponentScan
 public class Application extends SpringBootServletInitializer {
     public static void main(String[] args) {
@@ -36,7 +36,7 @@ public class Application extends SpringBootServletInitializer {
 
     private Predicate<String> apiPaths() {
         return or(
-                regex("/auth.*"),
+                regex("/account.*"),
                 regex("/rest/tracks.*"),
                 regex("/rest/source.*")
         );
@@ -47,11 +47,10 @@ public class Application extends SpringBootServletInitializer {
         return new ApiInfoBuilder()
                 .title("EigenMusik API")
                 .description("This is the documentation for the EigenMusik API.")
-                .termsOfServiceUrl("http://eigenmusik.com")
-                .contact("eigenmusik")
+                .contact("tim@eigenmusik.com")
                 .license("Apache License Version 2.0")
                 .licenseUrl("https://github.com/eigenmusik")
-                .version("1.0")
+                .version("pre-alpha")
                 .build();
     }
 }

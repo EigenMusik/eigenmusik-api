@@ -1,6 +1,6 @@
 package com.eigenmusik.config;
 
-import com.eigenmusik.domain.events.AccountEventHandler;
+import com.eigenmusik.account.AccountEventHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

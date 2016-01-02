@@ -1,10 +1,10 @@
 package it.com.eigenmusik.controllers;
 
-import com.eigenmusik.domain.Account;
-import com.eigenmusik.domain.Track;
-import com.eigenmusik.services.repository.AccountRepository;
-import com.eigenmusik.services.repository.TrackRepository;
-import com.eigenmusik.services.repository.UserProfileRepository;
+import com.eigenmusik.account.Account;
+import com.eigenmusik.account.AccountRepository;
+import com.eigenmusik.tracks.Track;
+import com.eigenmusik.tracks.TrackRepository;
+import com.eigenmusik.user.UserProfileRepository;
 import it.com.eigenmusik.IntegrationTestsBase;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
@@ -16,10 +16,8 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 import java.util.List;
 
-import static org.hamcrest.core.Is.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AuthenticationControllerTest extends IntegrationTestsBase {
 
@@ -49,20 +47,20 @@ public class AuthenticationControllerTest extends IntegrationTestsBase {
 
         String accountJson = new ObjectMapper().writeValueAsString(account);
 
-        mvc.perform(post("/auth/register").contentType(MediaType.APPLICATION_JSON).content(accountJson))
+        mvc.perform(post("/account/register").contentType(MediaType.APPLICATION_JSON).content(accountJson))
                 .andExpect(status().isOk());
 
         // Can't register twice with the same username.
         account.setEmail("anotherEmail@home.com");
         accountJson = new ObjectMapper().writeValueAsString(account);
-        mvc.perform(post("/auth/register").contentType(MediaType.APPLICATION_JSON).content(accountJson))
+        mvc.perform(post("/account/register").contentType(MediaType.APPLICATION_JSON).content(accountJson))
                 .andExpect(status().is4xxClientError());
 
         // Can't register twice with the same email.
         account.setEmail("anEmail@test.com");
         account.setName("anotherName");
         accountJson = new ObjectMapper().writeValueAsString(account);
-        mvc.perform(post("/auth/register").contentType(MediaType.APPLICATION_JSON).content(accountJson))
+        mvc.perform(post("/account/register").contentType(MediaType.APPLICATION_JSON).content(accountJson))
                 .andExpect(status().is4xxClientError());
     }
 }

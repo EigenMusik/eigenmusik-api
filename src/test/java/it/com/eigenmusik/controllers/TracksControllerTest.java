@@ -1,11 +1,11 @@
 package it.com.eigenmusik.controllers;
 
-import com.eigenmusik.domain.Account;
-import com.eigenmusik.domain.Track;
-import com.eigenmusik.domain.UserProfile;
-import com.eigenmusik.services.repository.AccountRepository;
-import com.eigenmusik.services.repository.TrackRepository;
-import com.eigenmusik.services.repository.UserProfileRepository;
+import com.eigenmusik.account.Account;
+import com.eigenmusik.account.AccountRepository;
+import com.eigenmusik.tracks.Track;
+import com.eigenmusik.tracks.TrackRepository;
+import com.eigenmusik.user.UserProfile;
+import com.eigenmusik.user.UserProfileRepository;
 import it.com.eigenmusik.IntegrationTestsBase;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,12 +16,9 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class TracksControllerTest extends IntegrationTestsBase {
 
@@ -55,9 +52,11 @@ public class TracksControllerTest extends IntegrationTestsBase {
 
         tracks = new ArrayList<>();
 
-        while(i < numberOfTracks) {
+        while (i < numberOfTracks) {
             Track track = factory.manufacturePojo(Track.class);
             track.setCreatedBy(userProfile);
+            track.setId(null);
+            track.setTrackSource(null);
             tracks.add(i, track);
             i++;
         }

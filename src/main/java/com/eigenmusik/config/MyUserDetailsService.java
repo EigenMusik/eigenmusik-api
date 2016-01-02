@@ -1,7 +1,7 @@
 package com.eigenmusik.config;
 
-import com.eigenmusik.domain.Account;
-import com.eigenmusik.services.repository.AccountRepository;
+import com.eigenmusik.account.Account;
+import com.eigenmusik.account.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

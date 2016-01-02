@@ -1,15 +1,28 @@
 package com.eigenmusik.sources;
 
-import com.eigenmusik.tracks.TrackStreamUrl;
+import com.eigenmusik.exceptions.SourceAuthenticationException;
 import com.eigenmusik.tracks.Track;
+import com.eigenmusik.tracks.TrackStreamUrl;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-public interface SourceService {
+public abstract class SourceService {
 
-    TrackStreamUrl getStreamUrl(Track track);
+    private SourceAccountRepository sourceAccountRepository;
 
-    SourceAccount getAccount(String authCode);
+    @Autowired
+    public SourceService(SourceAccountRepository sourceAccountRepository) {
+        this.sourceAccountRepository = sourceAccountRepository;
+    }
 
-    List<Track> getTracks(SourceAccount account);
+    public abstract TrackStreamUrl getStreamUrl(Track track);
+
+    public abstract SourceAccount getAccount(String authCode) throws SourceAuthenticationException;
+
+    public abstract List<Track> getTracks(SourceAccount account);
+
+    public SourceAccount save(SourceAccount sourceAccount) {
+        return sourceAccountRepository.save(sourceAccount);
+    }
 }

@@ -1,6 +1,9 @@
 package it.com.eigenmusik;
 
-import com.eigenmusik.tracks.TrackRepository;
+import com.eigenmusik.exceptions.EmailExistsException;
+import com.eigenmusik.exceptions.UsernameExistsException;
+import com.eigenmusik.user.User;
+import com.eigenmusik.user.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +14,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class OAuthTokenTests extends IntegrationTestsBase {
 
     @Autowired
-    TrackRepository trackRepository;
+    UserService userService;
 
     @Before
-    public void Setup() {
+    public void Setup() throws EmailExistsException, UsernameExistsException {
 
     }
 
@@ -25,7 +28,12 @@ public class OAuthTokenTests extends IntegrationTestsBase {
 
     @Test
     public void testAuthorized() throws Exception {
+        User user = new User();
+        user.setName("aUser");
+        user.setEmail("anEmail@email.com");
+        user.setPassword("password");
+        userService.register(user);
 
-        mvc.perform(get("/rest/tracks/").header("Authorization", "Bearer " + tokenForClient("user1"))).andExpect(status().isOk());
+        mvc.perform(get("/rest/tracks/").header("Authorization", "Bearer " + tokenForClient("aUser"))).andExpect(status().isOk());
     }
 }

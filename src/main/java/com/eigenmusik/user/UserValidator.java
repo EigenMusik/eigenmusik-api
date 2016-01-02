@@ -1,14 +1,14 @@
-package com.eigenmusik.account;
+package com.eigenmusik.user;
 
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-public class AccountValidator implements Validator {
+public class UserValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return Account.class.isAssignableFrom(clazz);
+        return User.class.isAssignableFrom(clazz);
     }
 
     @Override
@@ -17,9 +17,9 @@ public class AccountValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "field.required");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "field.required");
 
-        Account account = (Account) target;
+        User user = (User) target;
 
-        if (account.getPassword().length() < 3) {
+        if (user.getPassword().length() < 3) {
             errors.rejectValue("password", "field.min.length");
         }
 

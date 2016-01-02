@@ -1,11 +1,11 @@
 package com.eigenmusik.sources;
 
+import com.eigenmusik.exceptions.SourceAuthenticationException;
 import com.eigenmusik.exceptions.UserDoesntExistException;
 import com.eigenmusik.tracks.Track;
-import com.eigenmusik.tracks.TrackRepository;
-import com.eigenmusik.tracks.TrackSourceRepository;
+import com.eigenmusik.tracks.TrackService;
 import com.eigenmusik.user.UserProfile;
-import com.eigenmusik.user.UserProfileService;
+import com.eigenmusik.user.UserService;
 import com.wordnik.swagger.annotations.Api;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,16 +25,16 @@ public class SourceController {
     private static Logger log = Logger.getLogger(SourceController.class);
 
     @Autowired
-    private TrackRepository trackRepository;
+    private TrackService trackService;
 
     @Autowired
-    private UserProfileService userService;
+    private UserService userProfileService;
 
     @Autowired
-    private SourceAccountRepository sourceAccountRepository;
+    private UserService userService;
 
     @Autowired
-    private TrackSourceRepository trackSourceRepository;
+    private SourceService sourceService;
 
     @Autowired
     private SourceServiceFactory sourceServiceFactory;
@@ -46,22 +46,19 @@ public class SourceController {
             @PathVariable String source,
             @RequestBody String code,
             Principal principal
-    ) throws UserDoesntExistException {
-        UserProfile userProfile = userService.getUserProfile(principal.getName());
+    ) throws SourceAuthenticationException, UserDoesntExistException {
+        UserProfile userProfile = userService.getByUsername(principal.getName()).getUserProfile();
 
         SourceService sourceService = sourceServiceFactory.build(Source.valueOf(source.toUpperCase()));
 
         SourceAccount sourceAccount = sourceService.getAccount(code);
         sourceAccount.setOwner(userProfile);
 
-        sourceAccount = sourceAccountRepository.save(sourceAccount);
+        sourceAccount = sourceService.save(sourceAccount);
 
         List<Track> tracks = sourceService.getTracks(sourceAccount);
 
-        tracks.forEach(t -> trackSourceRepository.save(t.getTrackSource()));
-        tracks.forEach(t -> t.setCreatedBy(userProfile));
-
-        trackRepository.save(tracks);
+        trackService.save(tracks, userProfile);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

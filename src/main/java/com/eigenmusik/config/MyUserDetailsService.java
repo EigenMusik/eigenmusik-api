@@ -1,7 +1,7 @@
 package com.eigenmusik.config;
 
-import com.eigenmusik.account.Account;
-import com.eigenmusik.account.AccountRepository;
+import com.eigenmusik.user.User;
+import com.eigenmusik.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,11 +19,11 @@ import java.util.List;
 public class MyUserDetailsService implements UserDetailsService {
 
     @Autowired
-    AccountRepository accountRepository;
+    UserRepository accountRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Account account = accountRepository.findByName(username);
+        User account = accountRepository.findByName(username);
         if (account == null) {
             throw new UsernameNotFoundException("user name not found");
         }

@@ -1,9 +1,8 @@
-package com.eigenmusik.account;
+package com.eigenmusik.user;
 
 import com.eigenmusik.exceptions.EmailExistsException;
 import com.eigenmusik.exceptions.UserDoesntExistException;
 import com.eigenmusik.exceptions.UsernameExistsException;
-import com.eigenmusik.user.UserProfileService;
 import com.wordnik.swagger.annotations.Api;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,36 +16,29 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.security.Principal;
 
-@RequestMapping("/account")
+@RequestMapping("/user")
 @Controller
-@Api(value = "authentication")
-public class AccountController {
+@Api(value = "user")
+public class UserController {
 
-    private static Logger log = Logger.getLogger(AccountController.class);
-
-    @Autowired
-    private UserProfileService userService;
+    private static Logger log = Logger.getLogger(UserController.class);
 
     @Autowired
-    private AccountService accountService;
+    private UserService userService;
 
     @RequestMapping(value = "/me", method = RequestMethod.GET)
     public
     @ResponseBody
-    ResponseEntity<?> getMe(Principal principal) {
-        try {
-            return new ResponseEntity<>(userService.getUserProfile(principal.getName()), HttpStatus.OK);
-        } catch (UserDoesntExistException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+    ResponseEntity<?> getMe(Principal principal) throws UserDoesntExistException {
+        return new ResponseEntity<>(userService.getByUsername(principal.getName()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public
     @ResponseBody
-    ResponseEntity<?> register(@RequestBody Account account) {
+    ResponseEntity<?> register(@RequestBody User user) {
         try {
-            accountService.register(account);
+            userService.register(user);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (UsernameExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

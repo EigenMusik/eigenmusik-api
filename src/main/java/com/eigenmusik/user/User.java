@@ -1,12 +1,9 @@
-package com.eigenmusik.account;
+package com.eigenmusik.user;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
-public class Account {
+public class User {
 
     @Id
     @GeneratedValue
@@ -17,6 +14,8 @@ public class Account {
     @Column(nullable = false)
     private String password;
     private boolean isActive;
+    @OneToOne(optional = true, fetch = FetchType.EAGER)
+    private UserProfile userProfile;
 
     public Long getId() {
         return id;
@@ -56,5 +55,13 @@ public class Account {
 
     public void setActive(boolean isActive) {
         this.isActive = isActive;
+    }
+
+    public UserProfile getUserProfile() {
+        return userProfile;
+    }
+
+    public void setUserProfile(UserProfile userProfile) {
+        this.userProfile = userProfile;
     }
 }

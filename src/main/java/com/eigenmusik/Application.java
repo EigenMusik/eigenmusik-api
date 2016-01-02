@@ -26,7 +26,7 @@ public class Application extends SpringBootServletInitializer {
     }
 
     @Bean
-    public Docket petApi() {
+    public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
@@ -36,7 +36,7 @@ public class Application extends SpringBootServletInitializer {
 
     private Predicate<String> apiPaths() {
         return or(
-                regex("/account.*"),
+                regex("/user.*"),
                 regex("/rest/tracks.*"),
                 regex("/rest/source.*")
         );

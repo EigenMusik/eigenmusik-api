@@ -12,7 +12,7 @@ public class SourceAuthenticationException extends Exception {
 
     @Override
     public String getMessage() {
-        return "Could not authenticate with " + source.SOUNDCLOUD + ".";
+        return "Could not authenticate with " + source + ".";
     }
 
 }

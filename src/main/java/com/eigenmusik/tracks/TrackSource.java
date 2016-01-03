@@ -10,7 +10,7 @@ public class TrackSource {
     @Id
     @GeneratedValue
     private Long id;
-    private Long uri;
+    private String uri;
     private Source source;
     @ManyToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private SourceAccount sourceAccount;
@@ -23,11 +23,11 @@ public class TrackSource {
         this.id = id;
     }
 
-    public Long getUri() {
+    public String getUri() {
         return uri;
     }
 
-    public void setUri(Long uri) {
+    public void setUri(String uri) {
         this.uri = uri;
     }
 

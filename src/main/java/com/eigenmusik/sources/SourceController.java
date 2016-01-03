@@ -34,9 +34,6 @@ public class SourceController {
     private UserService userService;
 
     @Autowired
-    private SourceService sourceService;
-
-    @Autowired
     private SourceServiceFactory sourceServiceFactory;
 
     @RequestMapping(value = "/add/{source}", method = RequestMethod.POST)
@@ -57,6 +54,8 @@ public class SourceController {
         sourceAccount = sourceService.save(sourceAccount);
 
         List<Track> tracks = sourceService.getTracks(sourceAccount);
+        log.info(tracks);
+        log.info("GOT TRACKS");
 
         trackService.save(tracks, userProfile);
 

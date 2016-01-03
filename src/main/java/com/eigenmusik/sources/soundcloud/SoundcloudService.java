@@ -75,14 +75,14 @@ public class SoundcloudService extends SourceService {
 
     public TrackStreamUrl getStreamUrl(Track track) {
         log.info(track.getTrackSource().getOwner().getUri());
-        SoundcloudUser soundcloudUser = soundcloudUserRepository.findOne(track.getTrackSource().getOwner().getUri());
-        return new TrackStreamUrl(soundcloudGateway.getStreamUrl(track.getTrackSource().getUri(), soundcloudUser.getAccessToken()));
+        SoundcloudUser soundcloudUser = soundcloudUserRepository.findOne(Long.valueOf(track.getTrackSource().getOwner().getUri()));
+        return new TrackStreamUrl(soundcloudGateway.getStreamUrl(Long.valueOf(track.getTrackSource().getUri()), soundcloudUser.getAccessToken()));
     }
 
     // TODO where should this live?
     private Track mapToTrack(SoundcloudTrack t, SourceAccount account) {
         TrackSource trackSource = new TrackSource();
-        trackSource.setUri(t.getSoundcloudId());
+        trackSource.setUri(t.getSoundcloudId().toString());
         trackSource.setSource(Source.SOUNDCLOUD);
         trackSource.setOwner(account);
 

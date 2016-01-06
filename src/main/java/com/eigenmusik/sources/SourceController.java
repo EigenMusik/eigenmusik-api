@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.List;
 
-@RequestMapping("/rest/source")
+@RequestMapping("/sources")
 @Controller
 @Api(value = "sources")
 public class SourceController {
@@ -36,14 +36,17 @@ public class SourceController {
     @Autowired
     private SourceServiceFactory sourceServiceFactory;
 
+    @Autowired
+    private SourceAccountService sourceAccountService;
+
     @RequestMapping(value = "/add/{source}", method = RequestMethod.POST)
     public
     @ResponseBody
     ResponseEntity<HttpStatus> addSource(
-            @PathVariable String source,
-            @RequestBody String code,
-            Principal principal
-    ) throws SourceAuthenticationException, UserDoesntExistException {
+                    @PathVariable String source,
+                    @RequestBody String code,
+                    Principal principal
+            ) throws SourceAuthenticationException, UserDoesntExistException {
         UserProfile userProfile = userService.getByUsername(principal.getName()).getUserProfile();
 
         SourceService sourceService = sourceServiceFactory.build(Source.valueOf(source.toUpperCase()));
@@ -54,11 +57,20 @@ public class SourceController {
         sourceAccount = sourceService.save(sourceAccount);
 
         List<Track> tracks = sourceService.getTracks(sourceAccount);
-        log.info(tracks);
-        log.info("GOT TRACKS");
 
         trackService.save(tracks, userProfile);
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/accounts", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    List<SourceAccount> getAccounts(
+            Principal principal
+    ) throws SourceAuthenticationException, UserDoesntExistException {
+        UserProfile userProfile = userService.getByUsername(principal.getName()).getUserProfile();
+
+        return sourceAccountService.getAccounts(userProfile);
     }
 }

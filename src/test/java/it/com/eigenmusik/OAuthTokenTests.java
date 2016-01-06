@@ -23,7 +23,7 @@ public class OAuthTokenTests extends IntegrationTestsBase {
 
     @Test
     public void testNotAuthorized() throws Exception {
-        mvc.perform(get("/rest/tracks/")).andExpect(status().isUnauthorized());
+        mvc.perform(get("/tracks/")).andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -34,6 +34,6 @@ public class OAuthTokenTests extends IntegrationTestsBase {
         user.setPassword("password");
         userService.register(user);
 
-        mvc.perform(get("/rest/tracks/").header("Authorization", "Bearer " + tokenForClient("aUser"))).andExpect(status().isOk());
+        mvc.perform(get("/tracks/").header("Authorization", "Bearer " + tokenForClient("aUser"))).andExpect(status().isOk());
     }
 }

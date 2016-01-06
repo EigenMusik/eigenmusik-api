@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.security.Principal;
 
 @Controller
-@RequestMapping("/rest/tracks")
+@RequestMapping("/tracks")
 @Api(value = "tracks")
 public class TrackController {
 
@@ -44,7 +44,7 @@ public class TrackController {
         return trackService.createdBy(user.getUserProfile(), pageable);
     }
 
-    @RequestMapping(value = " /stream/{trackId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/stream/{trackId}", method = RequestMethod.GET)
     public
     @ResponseBody
     TrackStreamUrl getStreamUrl(@PathVariable Long trackId, Principal principal, Pageable pageable) {

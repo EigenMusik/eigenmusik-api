@@ -11,14 +11,14 @@ import com.eigenmusik.tracks.TrackStreamUrl;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
+@Service
 @ConfigurationProperties(prefix = "soundcloud")
 public class SoundcloudService extends SourceService {
 

@@ -22,11 +22,11 @@ public class RestConfiguration extends RepositoryRestMvcConfiguration {
     @Override
     protected void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
         try {
-            config.setBaseUri(new URI("/rest"));
+            config.setBaseUri(new URI("/"));
             config.exposeIdsFor(User.class);
             config.exposeIdsFor(Track.class);
         } catch (URISyntaxException e) {
-            logger.error("failed to set base uri", e);
+            logger.error("Failed to set base uri.", e);
         }
     }
 

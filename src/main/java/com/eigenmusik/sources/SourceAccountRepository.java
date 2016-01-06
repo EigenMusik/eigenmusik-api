@@ -1,10 +1,12 @@
 package com.eigenmusik.sources;
 
+import com.eigenmusik.user.UserProfile;
 import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.stereotype.Repository;
 
-@Repository()
-@RepositoryRestResource(exported = false)
+import java.util.List;
+
+@Repository
 public interface SourceAccountRepository extends PagingAndSortingRepository<SourceAccount, Long> {
+    List<SourceAccount> findByOwner(UserProfile userProfile);
 }

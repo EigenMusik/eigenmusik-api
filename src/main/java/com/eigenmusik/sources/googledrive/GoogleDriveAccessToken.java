@@ -6,11 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-/**
- * Created by timcoulson on 03/01/2016.
- */
 @Entity
 public class GoogleDriveAccessToken {
+
     @Id
     @GeneratedValue
     private Long id;

@@ -40,15 +40,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(new CorsFilter(), ChannelProcessingFilter.class);
 
         http
-                .requestMatcher(new AntPathRequestMatcher("/oauth/**"))
+                .requestMatcher(new AntPathRequestMatcher("/**"))
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-        http.authorizeRequests()
-                .antMatchers("/**").anonymous()
-                .and()
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         ;
     }
 }

@@ -31,6 +31,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,10 +41,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Created by timcoulson on 02/01/2016.
- */
-@Component
+@Service
 public class GoogleDriveService extends SourceService {
 
     private static Logger log = Logger.getLogger(GoogleDriveService.class);

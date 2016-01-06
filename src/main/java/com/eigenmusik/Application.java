@@ -37,8 +37,8 @@ public class Application extends SpringBootServletInitializer {
     private Predicate<String> apiPaths() {
         return or(
                 regex("/user.*"),
-                regex("/rest/tracks.*"),
-                regex("/rest/source.*")
+                regex("/tracks.*"),
+                regex("/source.*")
         );
 
     }

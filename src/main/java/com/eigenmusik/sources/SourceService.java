@@ -22,7 +22,18 @@ public abstract class SourceService {
 
     public abstract List<Track> getTracks(SourceAccount account);
 
+    public abstract String getName();
+
+    public abstract String getAuthUrl();
+
+    public abstract SourceType getType();
+
     public SourceAccount save(SourceAccount sourceAccount) {
         return sourceAccountRepository.save(sourceAccount);
     }
+
+    public Source getSource()
+    {
+        return new Source(this.getName(), this.getAuthUrl(), this.getType());
+    };
 }

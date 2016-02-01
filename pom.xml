@@ -139,6 +139,13 @@
             <version>v2-rev98-1.21.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.dropbox.core</groupId>
+            <artifactId>dropbox-core-sdk</artifactId>
+            <version>2.0-beta-5</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>

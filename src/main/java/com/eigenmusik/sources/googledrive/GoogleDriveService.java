@@ -2,11 +2,10 @@ package com.eigenmusik.sources.googledrive;
 
 import com.eigenmusik.exceptions.SourceAuthenticationException;
 import com.eigenmusik.exceptions.UserDoesntExistException;
-import com.eigenmusik.sources.Source;
+import com.eigenmusik.sources.SourceType;
 import com.eigenmusik.sources.SourceAccount;
 import com.eigenmusik.sources.SourceAccountRepository;
 import com.eigenmusik.sources.SourceService;
-import com.eigenmusik.sources.soundcloud.SoundcloudUser;
 import com.eigenmusik.tracks.Track;
 import com.eigenmusik.tracks.TrackSource;
 import com.eigenmusik.tracks.TrackStreamUrl;
@@ -14,8 +13,6 @@ import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
-import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
@@ -24,21 +21,18 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
-import com.google.api.services.drive.model.FileList;
 import com.google.api.services.oauth2.Oauth2;
 import com.google.api.services.oauth2.model.Userinfoplus;
-import org.apache.commons.io.IOUtils;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.GeneralSecurityException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -112,17 +106,17 @@ public class GoogleDriveService extends SourceService {
 
             SourceAccount account = new SourceAccount();
             account.setUri(googleDriveUser.getId());
-            account.setSource(Source.GOOGLEDRIVE);
+            account.setSource(SourceType.GOOGLEDRIVE);
 
             return account;
 
         } catch (IOException e) {
             SourceAuthenticationException sourceAuthenticationException = new SourceAuthenticationException();
-            sourceAuthenticationException.setSource(Source.GOOGLEDRIVE);
+            sourceAuthenticationException.setSource(SourceType.GOOGLEDRIVE);
             throw sourceAuthenticationException;
         } catch (UserDoesntExistException e) {
             SourceAuthenticationException sourceAuthenticationException = new SourceAuthenticationException();
-            sourceAuthenticationException.setSource(Source.GOOGLEDRIVE);
+            sourceAuthenticationException.setSource(SourceType.GOOGLEDRIVE);
             throw sourceAuthenticationException;
         }
     }
@@ -178,6 +172,28 @@ public class GoogleDriveService extends SourceService {
         return null;
     }
 
+    @Override
+    public String getName() {
+        return "Google Drive";
+    }
+
+    @Override
+    public String getAuthUrl() {
+        String scopes = "https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.apps.readonly https://www.googleapis.com/auth/drive.file email profile";
+
+        List<NameValuePair> params = new ArrayList<>();
+        params.add(new BasicNameValuePair("scope", scopes));
+        params.add(new BasicNameValuePair("client_id", googleDriveConfiguration.getClientId()));
+        params.add(new BasicNameValuePair("response_type", "code"));
+        params.add(new BasicNameValuePair("redirect_uri", googleDriveConfiguration.getRedirectUrl()));
+        String query = URLEncodedUtils.format(params, "UTF-8");
+        return "https://accounts.google.com/o/oauth2/v2/auth?" + query;
+    }
+
+    public SourceType getType() {
+        return SourceType.GOOGLEDRIVE;
+    }
+
     private static Boolean isPlayableFormat(String format) {
         if (format == null) {
             return false;
@@ -191,7 +207,7 @@ public class GoogleDriveService extends SourceService {
     private Track mapToTrack(File file, GoogleDriveUser user, SourceAccount sourceAccount) {
         TrackSource trackSource = new TrackSource();
         trackSource.setUri(file.getId());
-        trackSource.setSource(Source.GOOGLEDRIVE);
+        trackSource.setSource(SourceType.GOOGLEDRIVE);
         trackSource.setOwner(sourceAccount);
 
         Track track = new Track();

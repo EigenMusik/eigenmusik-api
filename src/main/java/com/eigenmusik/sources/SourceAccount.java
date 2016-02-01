@@ -11,7 +11,7 @@ public class SourceAccount {
     @GeneratedValue
     private Long id;
     private Long uri;
-    private Source source;
+    private SourceType source;
     @ManyToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private UserProfile owner;
 
@@ -31,11 +31,11 @@ public class SourceAccount {
         this.uri = uri;
     }
 
-    public Source getSource() {
+    public SourceType getSource() {
         return source;
     }
 
-    public void setSource(Source source) {
+    public void setSource(SourceType source) {
         this.source = source;
     }
 

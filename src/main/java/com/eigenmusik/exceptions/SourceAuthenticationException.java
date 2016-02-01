@@ -1,12 +1,12 @@
 package com.eigenmusik.exceptions;
 
-import com.eigenmusik.sources.Source;
+import com.eigenmusik.sources.SourceType;
 
 public class SourceAuthenticationException extends Exception {
 
-    private Source source;
+    private SourceType source;
 
-    public void setSource(Source source) {
+    public void setSource(SourceType source) {
         this.source = source;
     }
 

@@ -39,6 +39,16 @@ public class SourceController {
     @Autowired
     private SourceAccountService sourceAccountService;
 
+    @Autowired
+    private SourcesService sourcesService;
+
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    List<Source> index() {
+        return sourcesService.getSources();
+    }
+
     @RequestMapping(value = "/add/{source}", method = RequestMethod.POST)
     public
     @ResponseBody
@@ -49,7 +59,7 @@ public class SourceController {
             ) throws SourceAuthenticationException, UserDoesntExistException {
         UserProfile userProfile = userService.getByUsername(principal.getName()).getUserProfile();
 
-        SourceService sourceService = sourceServiceFactory.build(Source.valueOf(source.toUpperCase()));
+        SourceService sourceService = sourceServiceFactory.build(SourceType.valueOf(source.toUpperCase()));
 
         SourceAccount sourceAccount = sourceService.getAccount(code);
         sourceAccount.setOwner(userProfile);

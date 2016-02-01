@@ -1,7 +1,7 @@
 package ut.com.eigenmusik.sources.soundcloud;
 
 import com.eigenmusik.exceptions.SourceAuthenticationException;
-import com.eigenmusik.sources.Source;
+import com.eigenmusik.sources.SourceType;
 import com.eigenmusik.sources.SourceAccountRepository;
 import com.eigenmusik.sources.soundcloud.*;
 import org.junit.Before;
@@ -25,6 +25,7 @@ public class SoundcloudServiceTest {
     private SoundcloudAccessTokenRepository soundcloudAccessTokenRepository;
     private SoundcloudService soundcloudService;
     private SourceAccountRepository sourceAccountRepository;
+    private SoundcloudConfiguration soundcloudConfiguration;
 
     @Before
     public void setUp() throws IOException {
@@ -33,7 +34,8 @@ public class SoundcloudServiceTest {
         soundcloudUserRepository = mock(SoundcloudUserRepository.class);
         soundcloudAccessTokenRepository = mock(SoundcloudAccessTokenRepository.class);
         sourceAccountRepository = mock(SourceAccountRepository.class);
-        soundcloudService = new SoundcloudService(sourceAccountRepository, soundcloudGateway, soundcloudAccessTokenRepository, soundcloudUserRepository);
+        soundcloudConfiguration = mock(SoundcloudConfiguration.class);
+        soundcloudService = new SoundcloudService(sourceAccountRepository, soundcloudGateway, soundcloudAccessTokenRepository, soundcloudUserRepository, soundcloudConfiguration);
 
     }
 
@@ -46,7 +48,7 @@ public class SoundcloudServiceTest {
         when(soundcloudGateway.getMe(soundcloudAccessToken)).thenReturn(soundcloudUser);
 
         assertThat(soundcloudService.getAccount(authCode).getUri(), is(soundcloudUser.getSoundcloudId()));
-        assertThat(soundcloudService.getAccount(authCode).getSource(), is(Source.SOUNDCLOUD));
+        assertThat(soundcloudService.getAccount(authCode).getSource(), is(SourceType.SOUNDCLOUD));
     }
 
 

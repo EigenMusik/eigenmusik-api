@@ -1,6 +1,6 @@
 package com.eigenmusik.tracks;
 
-import com.eigenmusik.sources.Source;
+import com.eigenmusik.sources.SourceType;
 import com.eigenmusik.sources.SourceAccount;
 
 import javax.persistence.*;
@@ -11,7 +11,7 @@ public class TrackSource {
     @GeneratedValue
     private Long id;
     private String uri;
-    private Source source;
+    private SourceType source;
     @ManyToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private SourceAccount sourceAccount;
 
@@ -31,11 +31,11 @@ public class TrackSource {
         this.uri = uri;
     }
 
-    public Source getSource() {
+    public SourceType getSource() {
         return source;
     }
 
-    public void setSource(Source source) {
+    public void setSource(SourceType source) {
         this.source = source;
     }
 

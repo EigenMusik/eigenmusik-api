@@ -1,10 +1,7 @@
 package com.eigenmusik.sources.soundcloud;
 
 import com.eigenmusik.exceptions.SourceAuthenticationException;
-import com.eigenmusik.sources.Source;
-import com.eigenmusik.sources.SourceAccount;
-import com.eigenmusik.sources.SourceAccountRepository;
-import com.eigenmusik.sources.SourceService;
+import com.eigenmusik.sources.*;
 import com.eigenmusik.tracks.Track;
 import com.eigenmusik.tracks.TrackSource;
 import com.eigenmusik.tracks.TrackStreamUrl;
@@ -23,6 +20,7 @@ import java.util.stream.Collectors;
 public class SoundcloudService extends SourceService {
 
     private static Logger log = Logger.getLogger(SoundcloudService.class);
+    private SoundcloudConfiguration soundcloudConfiguration;
     private SoundcloudGateway soundcloudGateway;
     private SoundcloudAccessTokenRepository soundcloudAccessTokenRepository;
     private SoundcloudUserRepository soundcloudUserRepository;
@@ -32,15 +30,16 @@ public class SoundcloudService extends SourceService {
             SourceAccountRepository sourceAccountRepository,
             SoundcloudGateway soundcloudGateway,
             SoundcloudAccessTokenRepository soundcloudAccessTokenRepository,
-            SoundcloudUserRepository soundcloudUserRepository) {
+            SoundcloudUserRepository soundcloudUserRepository,
+            SoundcloudConfiguration soundcloudConfiguration) {
         super(sourceAccountRepository);
         this.soundcloudGateway = soundcloudGateway;
         this.soundcloudAccessTokenRepository = soundcloudAccessTokenRepository;
         this.soundcloudUserRepository = soundcloudUserRepository;
+        this.soundcloudConfiguration = soundcloudConfiguration;
     }
 
     public SourceAccount getAccount(String authCode) throws SourceAuthenticationException {
-
         try {
             SoundcloudAccessToken soundcloudAccessToken = soundcloudGateway.exchangeToken(authCode);
             SoundcloudUser soundcloudUser = soundcloudGateway.getMe(soundcloudAccessToken);
@@ -51,11 +50,11 @@ public class SoundcloudService extends SourceService {
 
             SourceAccount account = new SourceAccount();
             account.setUri(soundcloudUser.getId());
-            account.setSource(Source.SOUNDCLOUD);
+            account.setSource(SourceType.SOUNDCLOUD);
             return account;
         } catch (IOException e) {
             SourceAuthenticationException sourceAuthenticationException = new SourceAuthenticationException();
-            sourceAuthenticationException.setSource(Source.SOUNDCLOUD);
+            sourceAuthenticationException.setSource(SourceType.SOUNDCLOUD);
             throw sourceAuthenticationException;
         }
     }
@@ -73,6 +72,21 @@ public class SoundcloudService extends SourceService {
         return tracks;
     }
 
+    @Override
+    public String getName() {
+        return "Soundcloud";
+    }
+
+    @Override
+    public String getAuthUrl() {
+        return "https://soundcloud.com/connect?client_id=" + soundcloudConfiguration.getClientId()
+                + "&response_type=code" + "&redirect_uri=" + soundcloudConfiguration.getRedirectUrl();
+    }
+
+    public SourceType getType() {
+        return SourceType.SOUNDCLOUD;
+    }
+
     public TrackStreamUrl getStreamUrl(Track track) {
         log.info(track.getTrackSource().getOwner().getUri());
         SoundcloudUser soundcloudUser = soundcloudUserRepository.findOne(Long.valueOf(track.getTrackSource().getOwner().getUri()));
@@ -83,7 +97,7 @@ public class SoundcloudService extends SourceService {
     private Track mapToTrack(SoundcloudTrack t, SourceAccount account) {
         TrackSource trackSource = new TrackSource();
         trackSource.setUri(t.getSoundcloudId().toString());
-        trackSource.setSource(Source.SOUNDCLOUD);
+        trackSource.setSource(SourceType.SOUNDCLOUD);
         trackSource.setOwner(account);
 
         Track track = new Track();

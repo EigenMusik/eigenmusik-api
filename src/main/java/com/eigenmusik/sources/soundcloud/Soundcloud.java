@@ -17,16 +17,16 @@ import java.util.stream.Collectors;
 
 @Service
 @ConfigurationProperties(prefix = "soundcloud")
-public class SoundcloudService extends SourceService {
+public class Soundcloud extends Source {
 
-    private static Logger log = Logger.getLogger(SoundcloudService.class);
+    private static Logger log = Logger.getLogger(Soundcloud.class);
     private SoundcloudConfiguration soundcloudConfiguration;
     private SoundcloudGateway soundcloudGateway;
     private SoundcloudAccessTokenRepository soundcloudAccessTokenRepository;
     private SoundcloudUserRepository soundcloudUserRepository;
 
     @Autowired
-    public SoundcloudService(
+    public Soundcloud(
             SourceAccountRepository sourceAccountRepository,
             SoundcloudGateway soundcloudGateway,
             SoundcloudAccessTokenRepository soundcloudAccessTokenRepository,

@@ -6,7 +6,7 @@ import com.eigenmusik.exceptions.SourceAuthenticationException;
 import com.eigenmusik.sources.SourceType;
 import com.eigenmusik.sources.SourceAccount;
 import com.eigenmusik.sources.SourceAccountRepository;
-import com.eigenmusik.sources.SourceService;
+import com.eigenmusik.sources.Source;
 import com.eigenmusik.tracks.Track;
 import com.eigenmusik.tracks.TrackStreamUrl;
 import org.apache.log4j.Logger;
@@ -17,16 +17,16 @@ import java.util.List;
 import java.util.Locale;
 
 @Service
-public class DropboxService extends SourceService {
+public class Dropbox extends Source {
 
-    private static Logger log = Logger.getLogger(DropboxService.class);
+    private static Logger log = Logger.getLogger(Dropbox.class);
     private DropboxUserRepository dropboxUserRepository;
 
     private DropboxConfiguration dropboxConfiguration;
     private DropboxAccessTokenRepository dropboxAccessTokenRepository;
 
     @Autowired
-    public DropboxService(SourceAccountRepository sourceAccountRepository, DropboxUserRepository dropboxUserRepository, DropboxConfiguration dropboxConfiguration, DropboxAccessTokenRepository dropboxAccessTokenRepository) {
+    public Dropbox(SourceAccountRepository sourceAccountRepository, DropboxUserRepository dropboxUserRepository, DropboxConfiguration dropboxConfiguration, DropboxAccessTokenRepository dropboxAccessTokenRepository) {
         super(sourceAccountRepository);
         this.dropboxUserRepository = dropboxUserRepository;
         this.dropboxConfiguration = dropboxConfiguration;

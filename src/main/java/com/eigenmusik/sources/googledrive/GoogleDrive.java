@@ -5,7 +5,7 @@ import com.eigenmusik.exceptions.UserDoesntExistException;
 import com.eigenmusik.sources.SourceType;
 import com.eigenmusik.sources.SourceAccount;
 import com.eigenmusik.sources.SourceAccountRepository;
-import com.eigenmusik.sources.SourceService;
+import com.eigenmusik.sources.Source;
 import com.eigenmusik.tracks.Track;
 import com.eigenmusik.tracks.TrackSource;
 import com.eigenmusik.tracks.TrackStreamUrl;
@@ -36,9 +36,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class GoogleDriveService extends SourceService {
+public class GoogleDrive extends Source {
 
-    private static Logger log = Logger.getLogger(GoogleDriveService.class);
+    private static Logger log = Logger.getLogger(GoogleDrive.class);
 
     private final List<String> SCOPES =  Arrays.asList(
             "https://www.googleapis.com/auth/drive",
@@ -54,7 +54,7 @@ public class GoogleDriveService extends SourceService {
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 
     @Autowired
-    public GoogleDriveService(
+    public GoogleDrive(
             SourceAccountRepository sourceAccountRepository,
             GoogleDriveAccessTokenRepository googleDriveAccessTokenRepository,
             GoogleDriveConfiguration googleDriveConfiguration,

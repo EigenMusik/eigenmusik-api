@@ -1,31 +1,39 @@
 package com.eigenmusik.sources;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.eigenmusik.exceptions.SourceAuthenticationException;
+import com.eigenmusik.tracks.Track;
+import com.eigenmusik.tracks.TrackStreamUrl;
+import org.springframework.beans.factory.annotation.Autowired;
 
-/**
- * Created by timcoulson on 01/02/2016.
- */
-public class Source {
+import java.util.List;
 
-    private String authUrl;
-    private String name;
-    private SourceType type;
+public abstract class Source {
 
-    public Source(String name, String authUrl, SourceType sourceType) {
-        this.name = name;
-        this.authUrl = authUrl;
-        this.type = sourceType;
+    private SourceAccountRepository sourceAccountRepository;
+
+    @Autowired
+    public Source(SourceAccountRepository sourceAccountRepository) {
+        this.sourceAccountRepository = sourceAccountRepository;
     }
 
-    public String getName() {
-        return name;
+    public abstract TrackStreamUrl getStreamUrl(Track track);
+
+    public abstract SourceAccount getAccount(String authCode) throws SourceAuthenticationException;
+
+    public abstract List<Track> getTracks(SourceAccount account);
+
+    public abstract String getName();
+
+    public abstract String getAuthUrl();
+
+    public abstract SourceType getType();
+
+    public SourceAccount save(SourceAccount sourceAccount) {
+        return sourceAccountRepository.save(sourceAccount);
     }
 
-    public String getAuthUrl() {
-        return authUrl;
-    }
-
-    public SourceType getType() {
-        return type;
-    }
+    public SourceJson getJson()
+    {
+        return new SourceJson(this.getName(), this.getAuthUrl(), this.getType());
+    };
 }

@@ -1,8 +1,8 @@
 package com.eigenmusik.tracks;
 
 import com.eigenmusik.exceptions.UserDoesntExistException;
-import com.eigenmusik.sources.SourceService;
-import com.eigenmusik.sources.SourceServiceFactory;
+import com.eigenmusik.sources.Source;
+import com.eigenmusik.sources.SourceFactory;
 import com.eigenmusik.user.User;
 import com.eigenmusik.user.UserService;
 import com.wordnik.swagger.annotations.Api;
@@ -29,7 +29,7 @@ public class TrackController {
     private TrackService trackService;
 
     @Autowired
-    private SourceServiceFactory sourceServiceFactory;
+    private SourceFactory sourceFactory;
 
     @Autowired
     private UserService userService;
@@ -49,8 +49,8 @@ public class TrackController {
     @ResponseBody
     TrackStreamUrl getStreamUrl(@PathVariable Long trackId, Principal principal, Pageable pageable) {
         Track track = trackService.get(trackId);
-        SourceService sourceService = sourceServiceFactory.build(track.getTrackSource().getSource());
-        return sourceService.getStreamUrl(track);
+        Source source = sourceFactory.build(track.getTrackSource().getSource());
+        return source.getStreamUrl(track);
     }
 
 }

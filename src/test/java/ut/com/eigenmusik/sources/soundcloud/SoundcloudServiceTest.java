@@ -23,7 +23,7 @@ public class SoundcloudServiceTest {
     private SoundcloudGateway soundcloudGateway;
     private SoundcloudUserRepository soundcloudUserRepository;
     private SoundcloudAccessTokenRepository soundcloudAccessTokenRepository;
-    private SoundcloudService soundcloudService;
+    private Soundcloud soundcloudService;
     private SourceAccountRepository sourceAccountRepository;
     private SoundcloudConfiguration soundcloudConfiguration;
 
@@ -35,7 +35,7 @@ public class SoundcloudServiceTest {
         soundcloudAccessTokenRepository = mock(SoundcloudAccessTokenRepository.class);
         sourceAccountRepository = mock(SourceAccountRepository.class);
         soundcloudConfiguration = mock(SoundcloudConfiguration.class);
-        soundcloudService = new SoundcloudService(sourceAccountRepository, soundcloudGateway, soundcloudAccessTokenRepository, soundcloudUserRepository, soundcloudConfiguration);
+        soundcloudService = new Soundcloud(sourceAccountRepository, soundcloudGateway, soundcloudAccessTokenRepository, soundcloudUserRepository, soundcloudConfiguration);
 
     }
 

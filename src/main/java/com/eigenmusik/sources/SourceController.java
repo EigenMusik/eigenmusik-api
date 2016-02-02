@@ -2,7 +2,6 @@ package com.eigenmusik.sources;
 
 import com.eigenmusik.exceptions.SourceAuthenticationException;
 import com.eigenmusik.exceptions.UserDoesntExistException;
-import com.eigenmusik.tracks.Track;
 import com.eigenmusik.tracks.TrackService;
 import com.eigenmusik.user.UserProfile;
 import com.eigenmusik.user.UserService;
@@ -34,19 +33,16 @@ public class SourceController {
     private UserService userService;
 
     @Autowired
-    private SourceServiceFactory sourceServiceFactory;
+    private SourceFactory sourceFactory;
 
     @Autowired
-    private SourceAccountService sourceAccountService;
-
-    @Autowired
-    private SourcesService sourcesService;
+    private SourceService sourceService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public
     @ResponseBody
-    List<Source> index() {
-        return sourcesService.getSources();
+    List<SourceJson> index() {
+        return sourceService.getSources();
     }
 
     @RequestMapping(value = "/add/{source}", method = RequestMethod.POST)
@@ -59,16 +55,8 @@ public class SourceController {
             ) throws SourceAuthenticationException, UserDoesntExistException {
         UserProfile userProfile = userService.getByUsername(principal.getName()).getUserProfile();
 
-        SourceService sourceService = sourceServiceFactory.build(SourceType.valueOf(source.toUpperCase()));
-
-        SourceAccount sourceAccount = sourceService.getAccount(code);
-        sourceAccount.setOwner(userProfile);
-
-        sourceAccount = sourceService.save(sourceAccount);
-
-        List<Track> tracks = sourceService.getTracks(sourceAccount);
-
-        trackService.save(tracks, userProfile);
+        SourceType sourceType = SourceType.valueOf(source.toUpperCase());
+        sourceService.addAccount(sourceType, code, userProfile);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -81,6 +69,6 @@ public class SourceController {
     ) throws SourceAuthenticationException, UserDoesntExistException {
         UserProfile userProfile = userService.getByUsername(principal.getName()).getUserProfile();
 
-        return sourceAccountService.getAccounts(userProfile);
+        return sourceService.getAccounts(userProfile);
     }
 }

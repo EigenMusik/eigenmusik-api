@@ -2,38 +2,55 @@ package com.eigenmusik.sources;
 
 import com.eigenmusik.exceptions.SourceAuthenticationException;
 import com.eigenmusik.tracks.Track;
-import com.eigenmusik.tracks.TrackStreamUrl;
+import com.eigenmusik.tracks.TrackService;
+import com.eigenmusik.user.UserProfile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public abstract class SourceService {
+@Service
+public class SourceService {
 
-    private SourceAccountRepository sourceAccountRepository;
+    private final SourceAccountRepository sourceAccountRepository;
+    private final SourceFactory sourceFactory;
+    private final TrackService trackService;
 
     @Autowired
-    public SourceService(SourceAccountRepository sourceAccountRepository) {
+    public SourceService(SourceAccountRepository sourceAccountRepository, SourceFactory sourceFactory, TrackService trackService) {
         this.sourceAccountRepository = sourceAccountRepository;
+        this.sourceFactory = sourceFactory;
+        this.trackService = trackService;
     }
 
-    public abstract TrackStreamUrl getStreamUrl(Track track);
-
-    public abstract SourceAccount getAccount(String authCode) throws SourceAuthenticationException;
-
-    public abstract List<Track> getTracks(SourceAccount account);
-
-    public abstract String getName();
-
-    public abstract String getAuthUrl();
-
-    public abstract SourceType getType();
-
-    public SourceAccount save(SourceAccount sourceAccount) {
-        return sourceAccountRepository.save(sourceAccount);
+    public List<SourceAccount> getAccounts(UserProfile userProfile) {
+        return sourceAccountRepository.findByOwner(userProfile);
     }
 
-    public Source getSource()
+    public SourceAccount addAccount(SourceType sourceType, String code, UserProfile userProfile) throws SourceAuthenticationException {
+        Source source = sourceFactory.build(sourceType);
+
+        SourceAccount sourceAccount = source.getAccount(code);
+        sourceAccount.setOwner(userProfile);
+        source.save(sourceAccount);
+
+        syncAccount(sourceAccount);
+
+        return sourceAccount;
+    }
+
+    public void syncAccount(SourceAccount sourceAccount) {
+        trackService.save(sourceFactory.build(sourceAccount.getSource()).getTracks(sourceAccount), sourceAccount.getOwner());
+    }
+
+    public List<SourceJson> getSources()
     {
-        return new Source(this.getName(), this.getAuthUrl(), this.getType());
-    };
+        return Arrays.asList(SourceType.values())
+                .stream()
+                .map(sourceTypes -> sourceFactory.build(sourceTypes).getJson())
+                .collect(Collectors.toList());
+    }
+
 }

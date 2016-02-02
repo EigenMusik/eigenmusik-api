@@ -1,30 +1,30 @@
 package com.eigenmusik.sources;
 
-import com.eigenmusik.sources.dropbox.DropboxService;
-import com.eigenmusik.sources.googledrive.GoogleDriveService;
-import com.eigenmusik.sources.soundcloud.SoundcloudService;
+import com.eigenmusik.sources.dropbox.Dropbox;
+import com.eigenmusik.sources.googledrive.GoogleDrive;
+import com.eigenmusik.sources.soundcloud.Soundcloud;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SourceServiceFactory {
+public class SourceFactory {
 
-    private final SoundcloudService soundcloudService;
-    private final GoogleDriveService googleDriveService;
-    private final DropboxService dropboxService;
+    private final Soundcloud soundcloudService;
+    private final GoogleDrive googleDriveService;
+    private final Dropbox dropboxService;
 
     @Autowired
-    public SourceServiceFactory(
-            SoundcloudService soundcloudService,
-            GoogleDriveService googleDriveService,
-            DropboxService dropboxService
+    public SourceFactory(
+            Soundcloud soundcloudService,
+            GoogleDrive googleDriveService,
+            Dropbox dropboxService
                                 ) {
         this.soundcloudService = soundcloudService;
         this.googleDriveService = googleDriveService;
         this.dropboxService = dropboxService;
     }
 
-    public SourceService build(SourceType source) {
+    public Source build(SourceType source) {
         switch (source) {
             case SOUNDCLOUD:
                 return soundcloudService;

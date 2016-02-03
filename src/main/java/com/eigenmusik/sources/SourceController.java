@@ -2,7 +2,6 @@ package com.eigenmusik.sources;
 
 import com.eigenmusik.exceptions.SourceAuthenticationException;
 import com.eigenmusik.exceptions.UserDoesntExistException;
-import com.eigenmusik.tracks.TrackService;
 import com.eigenmusik.user.UserProfile;
 import com.eigenmusik.user.UserService;
 import com.wordnik.swagger.annotations.Api;
@@ -24,16 +23,7 @@ public class SourceController {
     private static Logger log = Logger.getLogger(SourceController.class);
 
     @Autowired
-    private TrackService trackService;
-
-    @Autowired
-    private UserService userProfileService;
-
-    @Autowired
     private UserService userService;
-
-    @Autowired
-    private SourceFactory sourceFactory;
 
     @Autowired
     private SourceService sourceService;
@@ -49,10 +39,10 @@ public class SourceController {
     public
     @ResponseBody
     ResponseEntity<HttpStatus> addSource(
-                    @PathVariable String source,
-                    @RequestBody String code,
-                    Principal principal
-            ) throws SourceAuthenticationException, UserDoesntExistException {
+            @PathVariable String source,
+            @RequestBody String code,
+            Principal principal
+    ) throws SourceAuthenticationException, UserDoesntExistException {
         UserProfile userProfile = userService.getByUsername(principal.getName()).getUserProfile();
 
         SourceType sourceType = SourceType.valueOf(source.toUpperCase());

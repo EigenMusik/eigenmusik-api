@@ -1,7 +1,5 @@
 package com.eigenmusik.sources.googledrive;
 
-import com.eigenmusik.sources.soundcloud.SoundcloudAccessToken;
-import com.eigenmusik.sources.soundcloud.json.SoundcloudUserJson;
 import com.google.api.services.oauth2.model.Userinfoplus;
 
 import javax.persistence.*;

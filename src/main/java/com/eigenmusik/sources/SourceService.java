@@ -1,7 +1,6 @@
 package com.eigenmusik.sources;
 
 import com.eigenmusik.exceptions.SourceAuthenticationException;
-import com.eigenmusik.tracks.Track;
 import com.eigenmusik.tracks.TrackService;
 import com.eigenmusik.user.UserProfile;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +44,7 @@ public class SourceService {
         trackService.save(sourceFactory.build(sourceAccount.getSource()).getTracks(sourceAccount), sourceAccount.getOwner());
     }
 
-    public List<SourceJson> getSources()
-    {
+    public List<SourceJson> getSources() {
         return Arrays.asList(SourceType.values())
                 .stream()
                 .map(sourceTypes -> sourceFactory.build(sourceTypes).getJson())

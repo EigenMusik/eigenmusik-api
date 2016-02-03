@@ -1,7 +1,7 @@
 package com.eigenmusik.tracks;
 
-import com.eigenmusik.sources.SourceType;
 import com.eigenmusik.sources.SourceAccount;
+import com.eigenmusik.sources.SourceType;
 
 import javax.persistence.*;
 

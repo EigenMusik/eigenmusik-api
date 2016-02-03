@@ -3,7 +3,7 @@ package com.eigenmusik.user;
 import javax.persistence.*;
 
 @Entity
-@Table(name="eigenmusik_user")
+@Table(name = "eigenmusik_user")
 public class User {
 
     @Id

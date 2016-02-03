@@ -1,7 +1,5 @@
 package com.eigenmusik.sources;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 /**
  * Created by timcoulson on 01/02/2016.
  */

@@ -9,27 +9,29 @@ import org.springframework.stereotype.Component;
 @Component
 public class SourceFactory {
 
-    private final Soundcloud soundcloudService;
-    private final GoogleDrive googleDriveService;
-    private final Dropbox dropboxService;
+    private final Soundcloud soundcloud;
+    private final GoogleDrive googleDrive;
+    private final Dropbox dropbox;
 
     @Autowired
     public SourceFactory(
-            Soundcloud soundcloudService,
-            GoogleDrive googleDriveService,
-            Dropbox dropboxService
-                                ) {
-        this.soundcloudService = soundcloudService;
-        this.googleDriveService = googleDriveService;
-        this.dropboxService = dropboxService;
+            Soundcloud soundcloud,
+            GoogleDrive googleDrive,
+            Dropbox dropbox
+    ) {
+        this.soundcloud = soundcloud;
+        this.googleDrive = googleDrive;
+        this.dropbox = dropbox;
     }
 
     public Source build(SourceType source) {
         switch (source) {
             case SOUNDCLOUD:
-                return soundcloudService;
+                return soundcloud;
             case GOOGLEDRIVE:
-                return googleDriveService;
+                return googleDrive;
+            case DROPBOX:
+                return dropbox;
             default:
                 return null;
         }

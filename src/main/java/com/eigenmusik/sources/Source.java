@@ -18,7 +18,7 @@ public abstract class Source {
 
     public abstract TrackStreamUrl getStreamUrl(Track track);
 
-    public abstract SourceAccount getAccount(String authCode) throws SourceAuthenticationException;
+    public abstract SourceAccount getAccount(String uri) throws SourceAuthenticationException;
 
     public abstract List<Track> getTracks(SourceAccount account);
 
@@ -32,8 +32,9 @@ public abstract class Source {
         return sourceAccountRepository.save(sourceAccount);
     }
 
-    public SourceJson getJson()
-    {
+    public SourceJson getJson() {
         return new SourceJson(this.getName(), this.getAuthUrl(), this.getType());
-    };
+    }
+
+    ;
 }

@@ -5,7 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class DropboxAccessToken  {
+public class DropboxAccessToken {
 
     @Id
     @GeneratedValue
@@ -20,5 +20,8 @@ public class DropboxAccessToken  {
         this.accessToken = accessToken;
     }
 
+    public String getAccessToken() {
+        return accessToken;
+    }
 }
 

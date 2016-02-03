@@ -1,16 +1,23 @@
 package com.eigenmusik.sources.soundcloud;
 
 import com.eigenmusik.exceptions.SourceAuthenticationException;
-import com.eigenmusik.sources.*;
+import com.eigenmusik.sources.Source;
+import com.eigenmusik.sources.SourceAccount;
+import com.eigenmusik.sources.SourceAccountRepository;
+import com.eigenmusik.sources.SourceType;
 import com.eigenmusik.tracks.Track;
 import com.eigenmusik.tracks.TrackSource;
 import com.eigenmusik.tracks.TrackStreamUrl;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,9 +46,13 @@ public class Soundcloud extends Source {
         this.soundcloudConfiguration = soundcloudConfiguration;
     }
 
-    public SourceAccount getAccount(String authCode) throws SourceAuthenticationException {
+    public SourceAccount getAccount(String uri) throws SourceAuthenticationException {
         try {
-            SoundcloudAccessToken soundcloudAccessToken = soundcloudGateway.exchangeToken(authCode);
+            // Retrieve code from Uri
+            List<NameValuePair> params = URLEncodedUtils.parse(new URI(uri), "UTF-8");
+            String code = params.stream().filter(p -> p.getName().equals("code")).findFirst().get().getValue();
+
+            SoundcloudAccessToken soundcloudAccessToken = soundcloudGateway.exchangeToken(code);
             SoundcloudUser soundcloudUser = soundcloudGateway.getMe(soundcloudAccessToken);
             soundcloudUser.setAccessToken(soundcloudAccessToken);
 
@@ -52,7 +63,7 @@ public class Soundcloud extends Source {
             account.setUri(soundcloudUser.getId());
             account.setSource(SourceType.SOUNDCLOUD);
             return account;
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             SourceAuthenticationException sourceAuthenticationException = new SourceAuthenticationException();
             sourceAuthenticationException.setSource(SourceType.SOUNDCLOUD);
             throw sourceAuthenticationException;

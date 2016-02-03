@@ -2,10 +2,10 @@ package com.eigenmusik.sources.googledrive;
 
 import com.eigenmusik.exceptions.SourceAuthenticationException;
 import com.eigenmusik.exceptions.UserDoesntExistException;
-import com.eigenmusik.sources.SourceType;
+import com.eigenmusik.sources.Source;
 import com.eigenmusik.sources.SourceAccount;
 import com.eigenmusik.sources.SourceAccountRepository;
-import com.eigenmusik.sources.Source;
+import com.eigenmusik.sources.SourceType;
 import com.eigenmusik.tracks.Track;
 import com.eigenmusik.tracks.TrackSource;
 import com.eigenmusik.tracks.TrackStreamUrl;
@@ -31,27 +31,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class GoogleDrive extends Source {
 
+    private static final JacksonFactory JSON_FACTORY =
+            JacksonFactory.getDefaultInstance();
+    private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
     private static Logger log = Logger.getLogger(GoogleDrive.class);
-
-    private final List<String> SCOPES =  Arrays.asList(
+    private final List<String> SCOPES = Arrays.asList(
             "https://www.googleapis.com/auth/drive",
             "email",
             "profile");
     private final GoogleDriveUserRepository googleDriveUserRepository;
-
     private GoogleDriveConfiguration googleDriveConfiguration;
     private GoogleDriveAccessTokenRepository googleDriveAccessTokenRepository;
-
-    private static final JacksonFactory JSON_FACTORY =
-            JacksonFactory.getDefaultInstance();
-    private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 
     @Autowired
     public GoogleDrive(
@@ -64,61 +65,6 @@ public class GoogleDrive extends Source {
         this.googleDriveAccessTokenRepository = googleDriveAccessTokenRepository;
         this.googleDriveConfiguration = googleDriveConfiguration;
         this.googleDriveUserRepository = googleDriveUserRepository;
-    }
-
-    @Override
-    public TrackStreamUrl getStreamUrl(Track track) {
-
-        GoogleDriveUser googleDriveUser = googleDriveUserRepository.findOne(track.getTrackSource().getOwner().getUri());
-
-        GoogleDriveAccessToken accessToken = googleDriveUser.getAccessToken();
-        TokenResponse tokenResponse =  new TokenResponse().setAccessToken(accessToken.getAccessToken());
-        tokenResponse.setExpiresInSeconds(Long.valueOf(accessToken.getExpiresIn()));
-        Credential credentials = new Credential(BearerToken.authorizationHeaderAccessMethod()).setFromTokenResponse(
-                tokenResponse);
-        Drive drive = buildService(credentials);
-
-        try {
-            return new TrackStreamUrl(drive.files().get(track.getTrackSource().getUri()).execute().getDownloadUrl() + "&oauth_token=" + accessToken.getAccessToken());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-
-    }
-
-    @Override
-    public SourceAccount getAccount(String authCode) throws SourceAuthenticationException {
-        try {
-            GoogleAuthorizationCodeFlow flow = getFlow();
-            GoogleTokenResponse response = flow
-                    .newTokenRequest(authCode)
-                    .setRedirectUri(googleDriveConfiguration.getRedirectUrl())
-                    .execute();
-            Credential credential = flow.createAndStoreCredential(response, null);
-            GoogleDriveAccessToken googleDriveAccessToken = new GoogleDriveAccessToken(credential);
-
-            GoogleDriveUser googleDriveUser = new GoogleDriveUser(getUserInfo(credential));
-            googleDriveUser.setAccessToken(googleDriveAccessToken);
-
-            googleDriveAccessTokenRepository.save(googleDriveAccessToken);
-            googleDriveUserRepository.save(googleDriveUser);
-
-            SourceAccount account = new SourceAccount();
-            account.setUri(googleDriveUser.getId());
-            account.setSource(SourceType.GOOGLEDRIVE);
-
-            return account;
-
-        } catch (IOException e) {
-            SourceAuthenticationException sourceAuthenticationException = new SourceAuthenticationException();
-            sourceAuthenticationException.setSource(SourceType.GOOGLEDRIVE);
-            throw sourceAuthenticationException;
-        } catch (UserDoesntExistException e) {
-            SourceAuthenticationException sourceAuthenticationException = new SourceAuthenticationException();
-            sourceAuthenticationException.setSource(SourceType.GOOGLEDRIVE);
-            throw sourceAuthenticationException;
-        }
     }
 
     static Userinfoplus getUserInfo(Credential credentials)
@@ -152,12 +98,81 @@ public class GoogleDrive extends Source {
                 .build();
     }
 
+    private static Boolean isPlayableFormat(String format) {
+        if (format == null) {
+            return false;
+        }
+        if (format.equals("wav") || format.equals("mp3")) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public TrackStreamUrl getStreamUrl(Track track) {
+
+        GoogleDriveUser googleDriveUser = googleDriveUserRepository.findOne(track.getTrackSource().getOwner().getUri());
+
+        GoogleDriveAccessToken accessToken = googleDriveUser.getAccessToken();
+        TokenResponse tokenResponse = new TokenResponse().setAccessToken(accessToken.getAccessToken());
+        tokenResponse.setExpiresInSeconds(Long.valueOf(accessToken.getExpiresIn()));
+        Credential credentials = new Credential(BearerToken.authorizationHeaderAccessMethod()).setFromTokenResponse(
+                tokenResponse);
+        Drive drive = buildService(credentials);
+
+        try {
+            return new TrackStreamUrl(drive.files().get(track.getTrackSource().getUri()).execute().getDownloadUrl() + "&oauth_token=" + accessToken.getAccessToken());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
+
+    @Override
+    public SourceAccount getAccount(String uri) throws SourceAuthenticationException {
+        try {
+            // Retrieve code from Uri
+            List<NameValuePair> params = URLEncodedUtils.parse(new URI(uri), "UTF-8");
+            String code = params.stream().filter(p -> p.getName().equals("code")).findFirst().get().getValue();
+
+            GoogleAuthorizationCodeFlow flow = getFlow();
+            GoogleTokenResponse response = flow
+                    .newTokenRequest(code)
+                    .setRedirectUri(googleDriveConfiguration.getRedirectUrl())
+                    .execute();
+            Credential credential = flow.createAndStoreCredential(response, null);
+            GoogleDriveAccessToken googleDriveAccessToken = new GoogleDriveAccessToken(credential);
+
+            GoogleDriveUser googleDriveUser = new GoogleDriveUser(getUserInfo(credential));
+            googleDriveUser.setAccessToken(googleDriveAccessToken);
+
+            googleDriveAccessTokenRepository.save(googleDriveAccessToken);
+            googleDriveUserRepository.save(googleDriveUser);
+
+            SourceAccount account = new SourceAccount();
+            account.setUri(googleDriveUser.getId());
+            account.setSource(SourceType.GOOGLEDRIVE);
+
+            return account;
+
+        } catch (IOException e) {
+            SourceAuthenticationException sourceAuthenticationException = new SourceAuthenticationException();
+            sourceAuthenticationException.setSource(SourceType.GOOGLEDRIVE);
+            throw sourceAuthenticationException;
+        } catch (UserDoesntExistException | URISyntaxException e) {
+            SourceAuthenticationException sourceAuthenticationException = new SourceAuthenticationException();
+            sourceAuthenticationException.setSource(SourceType.GOOGLEDRIVE);
+            throw sourceAuthenticationException;
+        }
+    }
+
     @Override
     public List<Track> getTracks(SourceAccount account) {
         GoogleDriveUser googleDriveUser = googleDriveUserRepository.findOne(account.getUri());
 
         GoogleDriveAccessToken accessToken = googleDriveUser.getAccessToken();
-        TokenResponse tokenResponse =  new TokenResponse().setAccessToken(accessToken.getAccessToken());
+        TokenResponse tokenResponse = new TokenResponse().setAccessToken(accessToken.getAccessToken());
         tokenResponse.setExpiresInSeconds(Long.valueOf(accessToken.getExpiresIn()));
         Credential credentials = new Credential(BearerToken.authorizationHeaderAccessMethod()).setFromTokenResponse(
                 tokenResponse);
@@ -192,16 +207,6 @@ public class GoogleDrive extends Source {
 
     public SourceType getType() {
         return SourceType.GOOGLEDRIVE;
-    }
-
-    private static Boolean isPlayableFormat(String format) {
-        if (format == null) {
-            return false;
-        }
-        if (format.equals("wav") || format.equals("mp3")) {
-            return true;
-        }
-        return false;
     }
 
     private Track mapToTrack(File file, GoogleDriveUser user, SourceAccount sourceAccount) {

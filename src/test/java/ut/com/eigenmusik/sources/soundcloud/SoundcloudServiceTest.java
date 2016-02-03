@@ -41,22 +41,22 @@ public class SoundcloudServiceTest {
 
     @Test
     public void testGetAccount() throws SourceAuthenticationException, IOException {
-        String authCode = "aCode";
+        String uri = "http://somecallback.com/?code=aCode";
         SoundcloudUser soundcloudUser = mock(SoundcloudUser.class);
         SoundcloudAccessToken soundcloudAccessToken = mock(SoundcloudAccessToken.class);
-        when(soundcloudGateway.exchangeToken(authCode)).thenReturn(soundcloudAccessToken);
+        when(soundcloudGateway.exchangeToken("aCode")).thenReturn(soundcloudAccessToken);
         when(soundcloudGateway.getMe(soundcloudAccessToken)).thenReturn(soundcloudUser);
 
-        assertThat(soundcloudService.getAccount(authCode).getUri(), is(soundcloudUser.getSoundcloudId()));
-        assertThat(soundcloudService.getAccount(authCode).getSource(), is(SourceType.SOUNDCLOUD));
+        assertThat(soundcloudService.getAccount(uri).getUri(), is(soundcloudUser.getSoundcloudId()));
+        assertThat(soundcloudService.getAccount(uri).getSource(), is(SourceType.SOUNDCLOUD));
     }
 
 
     @Test(expected = SourceAuthenticationException.class)
     public void testUnsucccessfulGetAccount() throws SourceAuthenticationException, IOException {
-        String authCode = "badCode";
-        when(soundcloudGateway.exchangeToken(authCode)).thenThrow(new IOException());
-        soundcloudService.getAccount(authCode);
+        String uri = "http://somecallback.com/?code=badcode";
+        when(soundcloudGateway.exchangeToken("badcode")).thenThrow(new IOException());
+        soundcloudService.getAccount(uri);
     }
 
 }

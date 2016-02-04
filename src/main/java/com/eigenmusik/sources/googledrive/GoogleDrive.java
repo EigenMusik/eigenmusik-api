@@ -2,10 +2,7 @@ package com.eigenmusik.sources.googledrive;
 
 import com.eigenmusik.exceptions.SourceAuthenticationException;
 import com.eigenmusik.exceptions.UserDoesntExistException;
-import com.eigenmusik.sources.Source;
-import com.eigenmusik.sources.SourceAccount;
-import com.eigenmusik.sources.SourceAccountRepository;
-import com.eigenmusik.sources.SourceType;
+import com.eigenmusik.sources.*;
 import com.eigenmusik.tracks.Track;
 import com.eigenmusik.tracks.TrackSource;
 import com.eigenmusik.tracks.TrackStreamUrl;
@@ -130,15 +127,11 @@ public class GoogleDrive extends Source {
     }
 
     @Override
-    public SourceAccount getAccount(String uri) throws SourceAuthenticationException {
+    public SourceAccount getAccount(SourceAccountAuthentication auth) throws SourceAuthenticationException {
         try {
-            // Retrieve code from Uri
-            List<NameValuePair> params = URLEncodedUtils.parse(new URI(uri), "UTF-8");
-            String code = params.stream().filter(p -> p.getName().equals("code")).findFirst().get().getValue();
-
             GoogleAuthorizationCodeFlow flow = getFlow();
             GoogleTokenResponse response = flow
-                    .newTokenRequest(code)
+                    .newTokenRequest(auth.getCode())
                     .setRedirectUri(googleDriveConfiguration.getRedirectUrl())
                     .execute();
             Credential credential = flow.createAndStoreCredential(response, null);
@@ -156,14 +149,8 @@ public class GoogleDrive extends Source {
 
             return account;
 
-        } catch (IOException e) {
-            SourceAuthenticationException sourceAuthenticationException = new SourceAuthenticationException();
-            sourceAuthenticationException.setSource(SourceType.GOOGLEDRIVE);
-            throw sourceAuthenticationException;
-        } catch (UserDoesntExistException | URISyntaxException e) {
-            SourceAuthenticationException sourceAuthenticationException = new SourceAuthenticationException();
-            sourceAuthenticationException.setSource(SourceType.GOOGLEDRIVE);
-            throw sourceAuthenticationException;
+        } catch (IOException | UserDoesntExistException e) {
+            throw new SourceAuthenticationException(SourceType.GOOGLEDRIVE);
         }
     }
 

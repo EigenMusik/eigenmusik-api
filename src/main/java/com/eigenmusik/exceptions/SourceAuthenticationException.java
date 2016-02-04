@@ -6,7 +6,7 @@ public class SourceAuthenticationException extends Exception {
 
     private SourceType source;
 
-    public void setSource(SourceType source) {
+    public SourceAuthenticationException(SourceType source) {
         this.source = source;
     }
 
@@ -14,5 +14,4 @@ public class SourceAuthenticationException extends Exception {
     public String getMessage() {
         return "Could not authenticate with " + source + ".";
     }
-
 }

@@ -1,10 +1,7 @@
 package com.eigenmusik.sources.soundcloud;
 
 import com.eigenmusik.exceptions.SourceAuthenticationException;
-import com.eigenmusik.sources.Source;
-import com.eigenmusik.sources.SourceAccount;
-import com.eigenmusik.sources.SourceAccountRepository;
-import com.eigenmusik.sources.SourceType;
+import com.eigenmusik.sources.*;
 import com.eigenmusik.tracks.Track;
 import com.eigenmusik.tracks.TrackSource;
 import com.eigenmusik.tracks.TrackStreamUrl;
@@ -46,13 +43,9 @@ public class Soundcloud extends Source {
         this.soundcloudConfiguration = soundcloudConfiguration;
     }
 
-    public SourceAccount getAccount(String uri) throws SourceAuthenticationException {
+    public SourceAccount getAccount(SourceAccountAuthentication auth) throws SourceAuthenticationException {
         try {
-            // Retrieve code from Uri
-            List<NameValuePair> params = URLEncodedUtils.parse(new URI(uri), "UTF-8");
-            String code = params.stream().filter(p -> p.getName().equals("code")).findFirst().get().getValue();
-
-            SoundcloudAccessToken soundcloudAccessToken = soundcloudGateway.exchangeToken(code);
+            SoundcloudAccessToken soundcloudAccessToken = soundcloudGateway.exchangeToken(auth.getCode());
             SoundcloudUser soundcloudUser = soundcloudGateway.getMe(soundcloudAccessToken);
             soundcloudUser.setAccessToken(soundcloudAccessToken);
 
@@ -63,10 +56,8 @@ public class Soundcloud extends Source {
             account.setUri(soundcloudUser.getId());
             account.setSource(SourceType.SOUNDCLOUD);
             return account;
-        } catch (IOException | URISyntaxException e) {
-            SourceAuthenticationException sourceAuthenticationException = new SourceAuthenticationException();
-            sourceAuthenticationException.setSource(SourceType.SOUNDCLOUD);
-            throw sourceAuthenticationException;
+        } catch (IOException e) {
+            throw new SourceAuthenticationException(SourceType.SOUNDCLOUD);
         }
     }
 

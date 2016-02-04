@@ -28,10 +28,10 @@ public class SourceService {
         return sourceAccountRepository.findByOwner(userProfile);
     }
 
-    public SourceAccount addAccount(SourceType sourceType, String code, UserProfile userProfile) throws SourceAuthenticationException {
+    public SourceAccount addAccount(SourceType sourceType, SourceAccountAuthentication auth, UserProfile userProfile) throws SourceAuthenticationException {
         Source source = sourceFactory.build(sourceType);
 
-        SourceAccount sourceAccount = source.getAccount(code);
+        SourceAccount sourceAccount = source.getAccount(auth);
         sourceAccount.setOwner(userProfile);
         source.save(sourceAccount);
 

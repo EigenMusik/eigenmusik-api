@@ -18,7 +18,7 @@ public abstract class Source {
 
     public abstract TrackStreamUrl getStreamUrl(Track track);
 
-    public abstract SourceAccount getAccount(String uri) throws SourceAuthenticationException;
+    public abstract SourceAccount getAccount(SourceAccountAuthentication auth) throws SourceAuthenticationException;
 
     public abstract List<Track> getTracks(SourceAccount account);
 

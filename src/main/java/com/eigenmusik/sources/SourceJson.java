@@ -1,8 +1,5 @@
 package com.eigenmusik.sources;
 
-/**
- * Created by timcoulson on 01/02/2016.
- */
 public class SourceJson {
 
     private String authUrl;

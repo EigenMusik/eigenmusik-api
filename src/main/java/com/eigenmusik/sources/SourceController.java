@@ -40,13 +40,13 @@ public class SourceController {
     @ResponseBody
     ResponseEntity<HttpStatus> addSource(
             @PathVariable String source,
-            @RequestBody String code,
+            @RequestBody SourceAccountAuthentication auth,
             Principal principal
     ) throws SourceAuthenticationException, UserDoesntExistException {
         UserProfile userProfile = userService.getByUsername(principal.getName()).getUserProfile();
 
         SourceType sourceType = SourceType.valueOf(source.toUpperCase());
-        sourceService.addAccount(sourceType, code, userProfile);
+        sourceService.addAccount(sourceType, auth, userProfile);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

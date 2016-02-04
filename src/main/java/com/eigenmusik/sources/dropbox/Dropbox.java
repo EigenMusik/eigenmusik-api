@@ -5,10 +5,7 @@ import com.dropbox.core.v1.DbxClientV1;
 import com.dropbox.core.v1.DbxEntry;
 import com.dropbox.core.v2.DbxClientV2;
 import com.eigenmusik.exceptions.SourceAuthenticationException;
-import com.eigenmusik.sources.Source;
-import com.eigenmusik.sources.SourceAccount;
-import com.eigenmusik.sources.SourceAccountRepository;
-import com.eigenmusik.sources.SourceType;
+import com.eigenmusik.sources.*;
 import com.eigenmusik.tracks.Track;
 import com.eigenmusik.tracks.TrackSource;
 import com.eigenmusik.tracks.TrackStreamUrl;
@@ -67,12 +64,9 @@ public class Dropbox extends Source {
     }
 
     @Override
-    public SourceAccount getAccount(String uri) throws SourceAuthenticationException {
+    public SourceAccount getAccount(SourceAccountAuthentication auth) throws SourceAuthenticationException {
         try {
-            List<NameValuePair> paramsList = URLEncodedUtils.parse(new URI(uri), "UTF-8");
-
-            Map<String, String[]> params = new HashMap<>();
-            paramsList.forEach(nameValuePair -> params.put(nameValuePair.getName(), new String[]{nameValuePair.getValue()}));
+            Map<String, String[]> params = auth.toParameterMap();
 
             // Inject our fake csrf token.
             // TODO figure out session with Spring.
@@ -92,23 +86,9 @@ public class Dropbox extends Source {
             account.setSource(SourceType.DROPBOX);
 
             return account;
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (DbxWebAuth.BadRequestException e) {
-            e.printStackTrace();
-        } catch (DbxException e) {
-            e.printStackTrace();
-        } catch (DbxWebAuth.ProviderException e) {
-            e.printStackTrace();
-        } catch (DbxWebAuth.NotApprovedException e) {
-            e.printStackTrace();
-        } catch (DbxWebAuth.CsrfException e) {
-            e.printStackTrace();
-        } catch (DbxWebAuth.BadStateException e) {
-            e.printStackTrace();
+        } catch (DbxWebAuth.BadRequestException | DbxException | DbxWebAuth.ProviderException | DbxWebAuth.CsrfException | DbxWebAuth.NotApprovedException | DbxWebAuth.BadStateException e) {
+            throw new SourceAuthenticationException(SourceType.DROPBOX);
         }
-        return null;
-
     }
 
     @Override

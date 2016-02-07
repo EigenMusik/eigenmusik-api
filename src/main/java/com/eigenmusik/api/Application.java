@@ -24,33 +24,4 @@ public class Application extends SpringBootServletInitializer {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
-
-    @Bean
-    public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(apiInfo())
-                .select()
-                .paths(apiPaths())
-                .build();
-    }
-
-    private Predicate<String> apiPaths() {
-        return or(
-                regex("/user.*"),
-                regex("/tracks.*"),
-                regex("/source.*")
-        );
-
-    }
-
-    private ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
-                .title("EigenMusik API")
-                .description("This is the documentation for the EigenMusik API.")
-                .contact("tim@eigenmusik.com")
-                .license("Apache License Version 2.0")
-                .licenseUrl("https://github.com/eigenmusik")
-                .version("pre-alpha")
-                .build();
-    }
 }

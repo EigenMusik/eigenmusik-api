@@ -24,8 +24,7 @@ public class SourceAccountAuthentication {
         this.state = state;
     }
 
-    public Map<String, String[]> toParameterMap()
-    {
+    public Map<String, String[]> toParameterMap() {
         Map<String, String[]> params = new HashMap<>();
         params.put("code", new String[]{code});
         params.put("state", new String[]{state});

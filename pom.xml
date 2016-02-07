@@ -163,6 +163,13 @@
             <version>72d46f445fce76eea25f1904fb1f8742a8faa350</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.newrelic.agent.java</groupId>
+            <artifactId>newrelic-agent</artifactId>
+            <version>3.9.0</version>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -205,10 +212,11 @@
                             <!-- Sets the path to the file which contains the execution data. -->
                             <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
                             <!-- Sets the output directory for the code coverage report. -->
-                            <outputDirectory>${project.build.outputDirectory}/META-INF/resources/coverage</outputDirectory>
-                                <excludes>
-                                    <exclude>**/eigenmusik/config/**</exclude>
-                                </excludes>
+                            <outputDirectory>${project.build.outputDirectory}/META-INF/resources/coverage
+                            </outputDirectory>
+                            <excludes>
+                                <exclude>**/eigenmusik/config/**</exclude>
+                            </excludes>
                         </configuration>
                     </execution>
                 </executions>
@@ -248,7 +256,6 @@
             </plugin>
 
 
-
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -270,34 +277,53 @@
                 </configuration>
             </plugin>
 
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <executions>
-                <execution>
-                    <id>copy</id>
-                    <phase>package</phase>
-                    <goals>
-                        <goal>copy</goal>
-                    </goals>
-                    <configuration>
-                        <artifactItems>
-                            <artifactItem>
-                                <groupId>${project.groupId}</groupId>
-                                <artifactId>${project.artifactId}</artifactId>
-                                <version>${project.version}</version>
-                                <type>jar</type>
-                                <overWrite>true</overWrite>
-                                <outputDirectory>${basedir}/target</outputDirectory>
-                                <destFileName>eigenmusik-heroku.jar</destFileName>
-                            </artifactItem>
-                        </artifactItems>
-                        <overWriteReleases>false</overWriteReleases>
-                        <overWriteSnapshots>true</overWriteSnapshots>
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>${project.groupId}</groupId>
+                                    <artifactId>${project.artifactId}</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/target</outputDirectory>
+                                    <destFileName>eigenmusik-heroku.jar</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <id>copy-new-relic</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeGroupIds>com.newrelic.agent.java</includeGroupIds>
+                            <includeArtifactIds>newrelic-agent</includeArtifactIds>
+                            <stripVersion>true</stripVersion>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 

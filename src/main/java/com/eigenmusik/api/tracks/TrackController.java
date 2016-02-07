@@ -2,9 +2,9 @@ package com.eigenmusik.api.tracks;
 
 import com.eigenmusik.api.exceptions.UserDoesntExistException;
 import com.eigenmusik.api.sources.Source;
+import com.eigenmusik.api.sources.SourceFactory;
 import com.eigenmusik.api.user.User;
 import com.eigenmusik.api.user.UserService;
-import com.eigenmusik.api.sources.SourceFactory;
 import com.wordnik.swagger.annotations.Api;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

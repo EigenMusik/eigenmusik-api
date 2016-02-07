@@ -1,7 +1,7 @@
 package com.eigenmusik.api.sources.soundcloud;
 
-import com.eigenmusik.api.sources.soundcloud.json.SoundcloudTrackJson;
 import com.eigenmusik.api.sources.soundcloud.json.SoundcloudAccessTokenJson;
+import com.eigenmusik.api.sources.soundcloud.json.SoundcloudTrackJson;
 import com.eigenmusik.api.sources.soundcloud.json.SoundcloudUserJson;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;

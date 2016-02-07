@@ -6,7 +6,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Pageable;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.service.*;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.ApiKey;
+import springfox.documentation.service.AuthorizationScope;
+import springfox.documentation.service.SecurityReference;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
@@ -20,6 +23,8 @@ import static springfox.documentation.builders.PathSelectors.regex;
 
 @Configuration
 public class SwaggerConfiguration {
+    public static final String bearerSchema = "bearer";
+
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
@@ -36,8 +41,6 @@ public class SwaggerConfiguration {
         return new ApiKey(bearerSchema, "bearer", "header");
     }
 
-    public static final String bearerSchema = "bearer";
-
     private SecurityContext securityContext() {
         return SecurityContext.builder()
                 .securityReferences(defaultAuth())
@@ -45,8 +48,7 @@ public class SwaggerConfiguration {
                 .build();
     }
 
-    public AuthorizationScope global()
-    {
+    public AuthorizationScope global() {
         return new AuthorizationScope("global", "accessEverything");
     }
 
@@ -61,7 +63,8 @@ public class SwaggerConfiguration {
         return or(
                 regex("/user.*"),
                 regex("/tracks.*"),
-                regex("/source.*")
+                regex("/source.*"),
+                regex("/messages.*")
         );
 
     }

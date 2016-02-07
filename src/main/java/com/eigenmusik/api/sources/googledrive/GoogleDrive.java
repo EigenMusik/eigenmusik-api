@@ -1,11 +1,11 @@
 package com.eigenmusik.api.sources.googledrive;
 
+import com.eigenmusik.api.exceptions.SourceAuthenticationException;
+import com.eigenmusik.api.exceptions.UserDoesntExistException;
 import com.eigenmusik.api.sources.*;
 import com.eigenmusik.api.tracks.Track;
 import com.eigenmusik.api.tracks.TrackSource;
 import com.eigenmusik.api.tracks.TrackStreamUrl;
-import com.eigenmusik.api.exceptions.SourceAuthenticationException;
-import com.eigenmusik.api.exceptions.UserDoesntExistException;
 import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.TokenResponse;

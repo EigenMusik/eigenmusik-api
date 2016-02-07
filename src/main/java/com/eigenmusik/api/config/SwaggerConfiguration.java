@@ -3,10 +3,13 @@ package com.eigenmusik.api.config;
 import com.google.common.base.Predicate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.Pageable;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
+
+import java.security.Principal;
 
 import static com.google.common.base.Predicates.or;
 import static springfox.documentation.builders.PathSelectors.regex;
@@ -19,7 +22,8 @@ public class SwaggerConfiguration {
                 .apiInfo(apiInfo())
                 .select()
                 .paths(apiPaths())
-                .build();
+                .build()
+                .ignoredParameterTypes(Principal.class, Pageable.class);
     }
 
     private Predicate<String> apiPaths() {

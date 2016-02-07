@@ -12,6 +12,8 @@ import org.springframework.hateoas.Resources;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.support.ServletContextResourcePatternResolver;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.View;
 
 import javax.servlet.ServletContext;
 import java.io.IOException;
@@ -30,7 +32,7 @@ public class HomeController {
     private ApplicationContext ctx;
 
     @RequestMapping("/")
-    public String home() throws IOException {
-        return "redirect:" + SWAGGER_UI_RESOURCE_PATH;
+    public ModelAndView home() throws IOException {
+        return new ModelAndView("home");
     }
 }

@@ -21,10 +21,6 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
-        <repository>
-            <id>webjars</id>
-            <url>http://webjars.github.com/m2</url>
-        </repository>
     </repositories>
 
     <dependencies>
@@ -41,6 +37,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
         <dependency>
@@ -159,13 +160,7 @@
         <dependency>
             <groupId>com.github.eigenmusik</groupId>
             <artifactId>eigenmusik-swagger-ui</artifactId>
-            <version>f3a2e870d8df171f1d5ddd59a6b727aef0c624b8</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>bootstrap</artifactId>
-            <version>3.0.3</version>
+            <version>72d46f445fce76eea25f1904fb1f8742a8faa350</version>
         </dependency>
 
     </dependencies>
@@ -210,7 +205,7 @@
                             <!-- Sets the path to the file which contains the execution data. -->
                             <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
                             <!-- Sets the output directory for the code coverage report. -->
-                            <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
+                            <outputDirectory>${project.build.outputDirectory}/META-INF/resources/coverage</outputDirectory>
                                 <excludes>
                                     <exclude>**/eigenmusik/config/**</exclude>
                                 </excludes>
@@ -230,6 +225,30 @@
                     <!-- Excludes integration tests when unit tests are run. -->
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <echo>Moving javadoc to be picked up by jar</echo>
+                                <copy todir="${project.build.outputDirectory}/META-INF/resources/javadoc">
+                                    <fileset dir="${basedir}/target/site/apidocs"/>
+                                </copy>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -281,5 +300,18 @@
         </plugin>
         </plugins>
     </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.3</version>
+                <configuration>
+                    <show>private</show>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
 </project>
 

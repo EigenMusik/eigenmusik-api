@@ -3,7 +3,7 @@ package com.eigenmusik.api.user;
 import com.eigenmusik.api.exceptions.EmailExistsException;
 import com.eigenmusik.api.exceptions.UserDoesntExistException;
 import com.eigenmusik.api.exceptions.UsernameExistsException;
-import com.wordnik.swagger.annotations.Api;
+import io.swagger.annotations.Api;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.security.Principal;
 
-@RequestMapping("/user")
+@RequestMapping("/users")
 @Controller
-@Api(value = "user")
-public class UserController {
+@Api(value = "users")
+public class UsersController {
 
-    private static Logger log = Logger.getLogger(UserController.class);
+    private static Logger log = Logger.getLogger(UsersController.class);
 
     @Autowired
     private UserService userService;

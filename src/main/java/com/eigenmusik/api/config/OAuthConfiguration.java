@@ -23,7 +23,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 @Configuration
 public class OAuthConfiguration {
-    private static final String RESOURCE_ID = "eigenmusik-services";
+    private static final String RESOURCE_ID = "eigenmusik-api";
 
     @Configuration
     @EnableAuthorizationServer

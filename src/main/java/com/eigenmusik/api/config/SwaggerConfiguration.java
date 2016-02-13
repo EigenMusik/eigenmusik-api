@@ -6,13 +6,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Pageable;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.ApiKey;
-import springfox.documentation.service.AuthorizationScope;
-import springfox.documentation.service.SecurityReference;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger.web.SecurityConfiguration;
 
 import java.security.Principal;
 import java.util.List;
@@ -23,7 +21,10 @@ import static springfox.documentation.builders.PathSelectors.regex;
 
 @Configuration
 public class SwaggerConfiguration {
-    public static final String bearerSchema = "bearer";
+
+    public static final String securitySchemaOAuth2 = "oauth2schema";
+    public static final String authorizationScopeGlobal = "global";
+    public static final String authorizationScopeGlobalDesc ="accessEverything";
 
     @Bean
     public Docket api() {
@@ -32,41 +33,37 @@ public class SwaggerConfiguration {
                 .select()
                 .paths(apiPaths())
                 .build()
-                .securitySchemes(newArrayList(bearerToken()))
+                .securitySchemes(newArrayList(securitySchema()))
                 .securityContexts(newArrayList(securityContext()))
                 .ignoredParameterTypes(Principal.class, Pageable.class);
-    }
-
-    private ApiKey bearerToken() {
-        return new ApiKey(bearerSchema, "bearer", "header");
-    }
-
-    private SecurityContext securityContext() {
-        return SecurityContext.builder()
-                .securityReferences(defaultAuth())
-                .forPaths(PathSelectors.regex("/.*"))
-                .build();
     }
 
     public AuthorizationScope global() {
         return new AuthorizationScope("global", "accessEverything");
     }
 
-    List<SecurityReference> defaultAuth() {
+    private List<SecurityReference> defaultAuth() {
+        AuthorizationScope authorizationScope
+                = new AuthorizationScope(authorizationScopeGlobal, authorizationScopeGlobalDesc);
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-        authorizationScopes[0] = global();
+        authorizationScopes[0] = authorizationScope;
         return newArrayList(
-                new SecurityReference(bearerSchema, authorizationScopes));
+                new SecurityReference(securitySchemaOAuth2, authorizationScopes));
+    }
+
+    private SecurityContext securityContext() {
+        return SecurityContext.builder()
+                .securityReferences(defaultAuth())
+                .forPaths(apiPaths())
+                .build();
     }
 
     private Predicate<String> apiPaths() {
         return or(
-                regex("/user.*"),
+                regex("/sources.*"),
                 regex("/tracks.*"),
-                regex("/source.*"),
-                regex("/messages.*")
-        );
-
+                regex("/user.*")
+                );
     }
 
     private ApiInfo apiInfo() {
@@ -78,5 +75,12 @@ public class SwaggerConfiguration {
                 .licenseUrl("https://github.com/eigenmusik")
                 .version("pre-alpha")
                 .build();
+    }
+
+    private OAuth securitySchema() {
+        TokenRequestEndpoint tre = new TokenRequestEndpoint("/oauth/token", "web", "secret");
+        TokenEndpoint te = new TokenEndpoint("/oauth/token", "access_token");
+        GrantType grantType = new AuthorizationCodeGrant(tre, te);
+        return new OAuth(securitySchemaOAuth2, newArrayList(global()), newArrayList(grantType));
     }
 }

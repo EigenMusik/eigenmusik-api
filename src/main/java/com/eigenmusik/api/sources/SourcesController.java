@@ -4,7 +4,7 @@ import com.eigenmusik.api.exceptions.SourceAuthenticationException;
 import com.eigenmusik.api.exceptions.UserDoesntExistException;
 import com.eigenmusik.api.user.UserProfile;
 import com.eigenmusik.api.user.UserService;
-import com.wordnik.swagger.annotations.Api;
+import io.swagger.annotations.Api;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,10 +17,10 @@ import java.util.List;
 
 @RequestMapping("/sources")
 @Controller
-@Api(value = "sources")
-public class SourceController {
+@Api
+public class SourcesController {
 
-    private static Logger log = Logger.getLogger(SourceController.class);
+    private static Logger log = Logger.getLogger(SourcesController.class);
 
     @Autowired
     private UserService userService;

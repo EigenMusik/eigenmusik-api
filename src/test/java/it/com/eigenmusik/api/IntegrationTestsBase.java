@@ -53,7 +53,7 @@ public abstract class IntegrationTestsBase {
         scopes.add("write");
 
         Set<String> resourceIds = new HashSet<>();
-        resourceIds.add("eigenmusik-services");
+        resourceIds.add("eigenmusik-api");
 
         OAuth2Request auth2Request = new OAuth2Request(null, "web", null, true, scopes, resourceIds, "", null, null);
         OAuth2AccessToken accessToken = defaultTokenServices.createAccessToken(new OAuth2Authentication(auth2Request, new TestingAuthenticationToken(username, null, authorities)));

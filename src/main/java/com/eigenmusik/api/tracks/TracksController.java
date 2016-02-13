@@ -5,7 +5,7 @@ import com.eigenmusik.api.sources.Source;
 import com.eigenmusik.api.sources.SourceFactory;
 import com.eigenmusik.api.user.User;
 import com.eigenmusik.api.user.UserService;
-import com.wordnik.swagger.annotations.Api;
+import io.swagger.annotations.Api;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,9 +21,9 @@ import java.security.Principal;
 @Controller
 @RequestMapping("/tracks")
 @Api(value = "tracks")
-public class TrackController {
+public class TracksController {
 
-    private static Logger log = Logger.getLogger(TrackController.class);
+    private static Logger log = Logger.getLogger(TracksController.class);
 
     @Autowired
     private TrackService trackService;

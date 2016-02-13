@@ -20,20 +20,20 @@ public class UserControllerTest extends IntegrationTestsBase {
 
         String accountJson = new ObjectMapper().writeValueAsString(account);
 
-        mvc.perform(post("/user/messages.register").contentType(MediaType.APPLICATION_JSON).content(accountJson))
+        mvc.perform(post("/user/register").contentType(MediaType.APPLICATION_JSON).content(accountJson))
                 .andExpect(status().isOk());
 
         // Can't messages.register twice with the same username.
         account.setEmail("anotherEmail@home.com");
         accountJson = new ObjectMapper().writeValueAsString(account);
-        mvc.perform(post("/user/messages.register").contentType(MediaType.APPLICATION_JSON).content(accountJson))
+        mvc.perform(post("/user/register").contentType(MediaType.APPLICATION_JSON).content(accountJson))
                 .andExpect(status().is4xxClientError());
 
         // Can't messages.register twice with the same email.
         account.setEmail("anEmail@test.com");
         account.setName("anotherName");
         accountJson = new ObjectMapper().writeValueAsString(account);
-        mvc.perform(post("/user/messages.register").contentType(MediaType.APPLICATION_JSON).content(accountJson))
+        mvc.perform(post("/user/register").contentType(MediaType.APPLICATION_JSON).content(accountJson))
                 .andExpect(status().is4xxClientError());
     }
 }

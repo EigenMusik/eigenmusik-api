@@ -62,7 +62,8 @@ public class SwaggerConfiguration {
         return or(
                 regex("/sources.*"),
                 regex("/tracks.*"),
-                regex("/user.*")
+                regex("/users.*"),
+                regex("/messages.*")
                 );
     }
 

@@ -164,6 +164,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.github.eigenmusik</groupId>
+            <artifactId>eigenmusik-messages</artifactId>
+            <version>5626dc4</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.newrelic.agent.java</groupId>
             <artifactId>newrelic-agent</artifactId>
             <version>3.9.0</version>

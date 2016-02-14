@@ -24,7 +24,7 @@ public class MessageService {
     private ApplicationContext applicationContext;
 
     public Map<String, String> getMessages(String locale, String partial) {
-        Resource resource = applicationContext.getResource("classpath:messages/" + partial + "/" + locale + ".json");
+        Resource resource = applicationContext.getResource("classpath:/META-INF/resources/webjars/eigenmusik-messages/1.0.0-SNAPSHOT/" + partial + "/" + locale + ".json");
         ObjectMapper mapper = new ObjectMapper();
         Map<String, String> jsonMap = new HashMap<>();
         try {

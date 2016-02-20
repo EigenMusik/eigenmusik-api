@@ -3,6 +3,7 @@ jdk:
 - oraclejdk8
 before_script:
   - psql -c 'create database eigenmusik;' -U postgres
+install: mvn clean install -Dmaven.javadoc.skip=false -B -V -DskipTests=true 
 cache:
   directories:
   - .autoconf

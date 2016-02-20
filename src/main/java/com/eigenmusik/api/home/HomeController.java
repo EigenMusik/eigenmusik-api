@@ -10,18 +10,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 
+/**
+ * Controller for the API homepage which includes links to Javadoc, Swagger, coverage etc.
+ */
 @Controller
 public class HomeController {
-
-    // TODO I don't like having versions hard coded.
-    private static final String SWAGGER_UI_RESOURCE_PATH = "webjars/eigenmusik-swagger-ui/2.1.4/index.html";
-    private static Logger log = Logger.getLogger(HomeController.class);
-    @Autowired
-    private ResourceLoader resourceLoader;
-
-    @Autowired
-    private ApplicationContext ctx;
-
     @RequestMapping("/")
     public ModelAndView home() throws IOException {
         return new ModelAndView("home");

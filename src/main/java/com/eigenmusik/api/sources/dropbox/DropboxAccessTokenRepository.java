@@ -5,5 +5,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 interface DropboxAccessTokenRepository extends CrudRepository<DropboxAccessToken, Long> {
-
 }

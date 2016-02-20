@@ -2,6 +2,9 @@ package com.eigenmusik.api.sources.soundcloud.json;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+/**
+ * JSON mapping of the Soundcloud user response.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SoundcloudUserJson {
 

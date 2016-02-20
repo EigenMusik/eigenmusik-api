@@ -1,9 +1,5 @@
 package com.eigenmusik.api.sources.soundcloud;
 
-/**
- * Created by timcoulson on 15/12/2015.
- */
-
 import com.eigenmusik.api.sources.soundcloud.json.SoundcloudTrackJson;
 import com.eigenmusik.api.tracks.Track;
 

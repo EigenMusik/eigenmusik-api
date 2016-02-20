@@ -20,16 +20,35 @@ public class TrackService {
         this.trackSourceRepository = trackSourceRepository;
     }
 
+    /**
+     * Save a list of tracks for the given user.
+     *
+     * @param tracks
+     * @param userProfile
+     */
     public void save(List<Track> tracks, UserProfile userProfile) {
         tracks.forEach(t -> t.setCreatedBy(userProfile));
         tracks.forEach(t -> trackSourceRepository.save(t.getTrackSource()));
         trackRepository.save(tracks);
     }
 
+    /**
+     * Get a track from a given EigenMusik id.
+     *
+     * @param trackId
+     * @return
+     */
     public Track get(Long trackId) {
         return trackRepository.findOne(trackId);
     }
 
+    /**
+     * Get tracks for the given user.
+     *
+     * @param userProfile
+     * @param pageable
+     * @return
+     */
     public Page<Track> createdBy(UserProfile userProfile, Pageable pageable) {
         return trackRepository.createdBy(userProfile, pageable);
     }

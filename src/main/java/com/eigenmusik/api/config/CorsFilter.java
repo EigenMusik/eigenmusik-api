@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Cors Filter for each request to allow requests from the SPA.
+ */
 @Component
 public class CorsFilter extends OncePerRequestFilter {
 

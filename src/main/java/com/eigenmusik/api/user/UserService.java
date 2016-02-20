@@ -39,6 +39,14 @@ public class UserService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(username, user.getPassword(), authorities);
     }
 
+    /**
+     * Register the given user.
+     *
+     * @param user
+     * @return
+     * @throws UsernameExistsException
+     * @throws EmailExistsException
+     */
     public User register(User user) throws UsernameExistsException, EmailExistsException {
 
         // Check if a user with conflicting parameters exists.
@@ -58,6 +66,13 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
+    /**
+     * Get a user from a given username.
+     *
+     * @param username
+     * @return
+     * @throws UserDoesntExistException
+     */
     public User getByUsername(String username) throws UserDoesntExistException {
         User user = userRepository.findByName(username);
         if (user == null) {
@@ -66,6 +81,13 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
+    /**
+     * Get a user from a given email address.
+     *
+     * @param email
+     * @return
+     * @throws UserDoesntExistException
+     */
     public User getByEmail(String email) throws UserDoesntExistException {
         User user = userRepository.findByEmail(email);
         if (user == null) {

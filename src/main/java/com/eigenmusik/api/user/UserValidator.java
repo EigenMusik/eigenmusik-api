@@ -4,6 +4,11 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
+/**
+ * Validate a user account.
+ *
+ * TODO hook up the user validator
+ */
 public class UserValidator implements Validator {
 
     @Override

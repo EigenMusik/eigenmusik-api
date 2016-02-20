@@ -6,6 +6,9 @@ import com.eigenmusik.api.sources.soundcloud.Soundcloud;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Given a source type, resolve the Source.
+ */
 @Component
 public class SourceFactory {
 

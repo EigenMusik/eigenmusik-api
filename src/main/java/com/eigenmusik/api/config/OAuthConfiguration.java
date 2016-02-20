@@ -21,13 +21,15 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
+/**
+ * Configure the API for OAuth.
+ */
 @Configuration
 public class OAuthConfiguration {
-    private static final String RESOURCE_ID = "eigenmusik-api";
 
     @Configuration
     @EnableAuthorizationServer
-    public static class MyAuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
+    public static class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
 
         @Autowired
         @Qualifier("myAuthenticationManager")
@@ -43,7 +45,7 @@ public class OAuthConfiguration {
             clients.inMemory().withClient("web")
                     .authorities("ROLE_USER", "ROLE_CLIENT")
                     .authorizedGrantTypes("password")
-                    .resourceIds(RESOURCE_ID)
+                    .resourceIds(EigenMusikConfiguration.RESOURCE_ID)
                     .secret("secret")
                     .scopes("read", "write");
         }
@@ -62,7 +64,7 @@ public class OAuthConfiguration {
 
     @Configuration
     @EnableResourceServer
-    public static class MyResourceServerConfig extends ResourceServerConfigurerAdapter {
+    public static class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
         @Autowired
         private ClientDetailsService clientDetailsService;
@@ -83,7 +85,7 @@ public class OAuthConfiguration {
             defaultTokenServices.setTokenStore(tokenStore());
             defaultTokenServices.setTokenEnhancer(accessTokenConverter());
             defaultTokenServices.setClientDetailsService(clientDetailsService);
-            resources.resourceId(RESOURCE_ID).tokenServices(defaultTokenServices);
+            resources.resourceId(EigenMusikConfiguration.RESOURCE_ID).tokenServices(defaultTokenServices);
         }
 
         @Override

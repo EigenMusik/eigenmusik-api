@@ -1,13 +1,12 @@
 package com.eigenmusik.api.sources.soundcloud.json;
 
-/**
- * Created by timcoulson on 15/12/2015.
- */
-
 import com.eigenmusik.api.sources.soundcloud.SoundcloudUser;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * JSON mapping of the Soundcloud track response.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SoundcloudTrackJson {
 

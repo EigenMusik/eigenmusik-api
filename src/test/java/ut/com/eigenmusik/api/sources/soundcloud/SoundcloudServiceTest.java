@@ -7,8 +7,6 @@ import com.eigenmusik.api.sources.SourceType;
 import com.eigenmusik.api.sources.soundcloud.*;
 import org.junit.Before;
 import org.junit.Test;
-import uk.co.jemos.podam.api.PodamFactory;
-import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 import java.io.IOException;
 
@@ -18,8 +16,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class SoundcloudServiceTest {
-
-    private PodamFactory factory = new PodamFactoryImpl();
 
     private SoundcloudGateway soundcloudGateway;
     private SoundcloudUserRepository soundcloudUserRepository;
@@ -35,7 +31,7 @@ public class SoundcloudServiceTest {
         soundcloudAccessTokenRepository = mock(SoundcloudAccessTokenRepository.class);
         sourceAccountRepository = mock(SourceAccountRepository.class);
         soundcloudConfiguration = mock(SoundcloudConfiguration.class);
-        soundcloudService = new Soundcloud(sourceAccountRepository, soundcloudGateway, soundcloudAccessTokenRepository, soundcloudUserRepository, soundcloudConfiguration);
+        soundcloudService = new Soundcloud(soundcloudGateway, soundcloudAccessTokenRepository, soundcloudUserRepository, soundcloudConfiguration);
     }
 
     @Test
@@ -51,7 +47,6 @@ public class SoundcloudServiceTest {
         assertThat(soundcloudService.getAccount(auth).getUri(), is(soundcloudUser.getSoundcloudId()));
         assertThat(soundcloudService.getAccount(auth).getSource(), is(SourceType.SOUNDCLOUD));
     }
-
 
     @Test(expected = SourceAuthenticationException.class)
     public void testUnsucccessfulGetAccount() throws SourceAuthenticationException, IOException {

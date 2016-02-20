@@ -4,6 +4,7 @@ import com.dropbox.core.*;
 import com.dropbox.core.v1.DbxClientV1;
 import com.dropbox.core.v1.DbxEntry;
 import com.dropbox.core.v2.DbxClientV2;
+import com.eigenmusik.api.config.EigenMusikConfiguration;
 import com.eigenmusik.api.exceptions.SourceAuthenticationException;
 import com.eigenmusik.api.sources.*;
 import com.eigenmusik.api.tracks.Track;
@@ -18,29 +19,32 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * DropBox implementation of the Source abstract.
+ */
 @Service
 public class Dropbox extends Source {
 
     private static Logger log = Logger.getLogger(Dropbox.class);
-    private final DbxRequestConfig config;
-    private DropboxUserRepository dropboxUserRepository;
 
-    private DropboxAccessTokenRepository dropboxAccessTokenRepository;
-    private DbxWebAuth webAuth;
+    private final DbxRequestConfig config;
+    private final DropboxUserRepository dropboxUserRepository;
+    private final DropboxAccessTokenRepository dropboxAccessTokenRepository;
+    private final DbxWebAuth webAuth;
 
     @Autowired
-    public Dropbox(SourceAccountRepository sourceAccountRepository, DropboxUserRepository dropboxUserRepository, DropboxConfiguration dropboxConfiguration, DropboxAccessTokenRepository dropboxAccessTokenRepository) {
-        super(sourceAccountRepository);
+    public Dropbox(
+            DropboxUserRepository dropboxUserRepository,
+            DropboxConfiguration dropboxConfiguration,
+            DropboxAccessTokenRepository dropboxAccessTokenRepository
+    ) {
         this.dropboxUserRepository = dropboxUserRepository;
         this.dropboxAccessTokenRepository = dropboxAccessTokenRepository;
 
         DbxAppInfo appInfo = new DbxAppInfo(dropboxConfiguration.getClientId(), dropboxConfiguration.getClientSecret());
-
-        this.config = new DbxRequestConfig(
-                "JavaTutorial/1.0", Locale.getDefault().toString());
+        this.config = new DbxRequestConfig(EigenMusikConfiguration.APP_NAME, Locale.getDefault().toString());
 
         DbxSessionStore dbxSessionStore = new DropboxUserSessionStore();
-
         this.webAuth = new DbxWebAuth(config, appInfo, dropboxConfiguration.getRedirectUrl(), dbxSessionStore);
     }
 
@@ -63,25 +67,29 @@ public class Dropbox extends Source {
         try {
             Map<String, String[]> params = auth.toParameterMap();
 
-            // Inject our fake csrf token.
-            // TODO figure out session with Spring.
+            // Inject a fake csrf token to authenticate the client, I know this is naughty :)
+            // TODO figure out session handling with Spring.
             params.put("state", new String[]{DropboxUserSessionStore.fakeCsrfToken});
             DbxAuthFinish authFinish = webAuth.finish(params);
             DbxClientV2 dbxClient = new DbxClientV2(config, authFinish.accessToken);
 
+            // Instantiate the dropbox access token.
             DropboxAccessToken dropboxAccessToken = new DropboxAccessToken(authFinish.accessToken);
             DropboxUser dropboxUser = new DropboxUser(dbxClient.users.getCurrentAccount());
             dropboxUser.setAccessToken(dropboxAccessToken);
 
+            // Save the token and dropbox user account.
             dropboxAccessTokenRepository.save(dropboxAccessToken);
             dropboxUserRepository.save(dropboxUser);
 
+            // Instantiate and return the EigenMusik source account object.
             SourceAccount account = new SourceAccount();
             account.setUri(dropboxUser.getId());
             account.setSource(SourceType.DROPBOX);
 
             return account;
         } catch (DbxWebAuth.BadRequestException | DbxException | DbxWebAuth.ProviderException | DbxWebAuth.CsrfException | DbxWebAuth.NotApprovedException | DbxWebAuth.BadStateException e) {
+            // TODO bit of a code smell catching all these exceptions, perhaps it's a third party inevitability.
             throw new SourceAuthenticationException(SourceType.DROPBOX);
         }
     }
@@ -91,16 +99,25 @@ public class Dropbox extends Source {
         DropboxUser dropboxUser = dropboxUserRepository.findOne(account.getUri());
         DropboxAccessToken accessToken = dropboxUser.getAccessToken();
 
+        // Using the V1 client, couldn't get V2 to work :(
+        // TODO further investigate DropBox V2.
         DbxClientV1 clientv1 = new DbxClientV1(config, accessToken.getAccessToken());
 
         try {
             return clientv1.searchFileAndFolderNames("/", "mp3").stream().map(mp3 -> mapToTrack(mp3, account)).collect(Collectors.toList());
         } catch (DbxException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return null;
     }
 
+    /**
+     * Help classer to map a DropBox track entity to an EigenMusik one.
+     *
+     * @param dbxEntry
+     * @param sourceAccount
+     * @return
+     */
     private Track mapToTrack(DbxEntry dbxEntry, SourceAccount sourceAccount) {
         TrackSource trackSource = new TrackSource();
         trackSource.setUri(dbxEntry.path);
@@ -109,6 +126,7 @@ public class Dropbox extends Source {
 
         Track track = new Track();
         track.setName(dbxEntry.path);
+        // TODO how do we handle files without artist and track names?
         track.setArtist("Drive File");
         track.setTrackSource(trackSource);
 

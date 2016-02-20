@@ -3,6 +3,9 @@ package com.eigenmusik.api.sources.soundcloud.json;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
+/**
+ * A JSON mapping of the Soundcloud Access token response.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SoundcloudAccessTokenJson {
 

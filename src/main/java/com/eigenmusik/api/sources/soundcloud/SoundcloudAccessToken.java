@@ -6,9 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-/**
- * Created by timcoulson on 26/12/2015.
- */
 @Entity
 public class SoundcloudAccessToken {
 

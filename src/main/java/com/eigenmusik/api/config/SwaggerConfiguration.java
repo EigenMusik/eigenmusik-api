@@ -5,12 +5,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Pageable;
 import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger.web.SecurityConfiguration;
 
 import java.security.Principal;
 import java.util.List;
@@ -19,12 +17,15 @@ import static com.google.common.base.Predicates.or;
 import static com.google.common.collect.Lists.newArrayList;
 import static springfox.documentation.builders.PathSelectors.regex;
 
+/**
+ * Swagger configuration.
+ */
 @Configuration
 public class SwaggerConfiguration {
 
     public static final String securitySchemaOAuth2 = "oauth2schema";
     public static final String authorizationScopeGlobal = "global";
-    public static final String authorizationScopeGlobalDesc ="accessEverything";
+    public static final String authorizationScopeGlobalDesc = "accessEverything";
 
     @Bean
     public Docket api() {
@@ -39,7 +40,7 @@ public class SwaggerConfiguration {
     }
 
     public AuthorizationScope global() {
-        return new AuthorizationScope("global", "accessEverything");
+        return new AuthorizationScope(authorizationScopeGlobal, authorizationScopeGlobalDesc);
     }
 
     private List<SecurityReference> defaultAuth() {
@@ -64,7 +65,7 @@ public class SwaggerConfiguration {
                 regex("/tracks.*"),
                 regex("/users.*"),
                 regex("/messages.*")
-                );
+        );
     }
 
     private ApiInfo apiInfo() {

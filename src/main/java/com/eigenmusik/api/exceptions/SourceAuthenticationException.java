@@ -12,6 +12,6 @@ public class SourceAuthenticationException extends Exception {
 
     @Override
     public String getMessage() {
-        return "Could not authenticate with " + source + ".";
+        return "SOURCE_AUTHENTICATION_EXCEPTION";
     }
 }

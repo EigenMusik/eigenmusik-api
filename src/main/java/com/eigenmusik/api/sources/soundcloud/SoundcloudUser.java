@@ -5,6 +5,7 @@ import com.eigenmusik.api.sources.soundcloud.json.SoundcloudUserJson;
 import javax.persistence.*;
 
 @Entity
+// TODO can we have a user and access token interface, or some kind of Oauth interface?
 public class SoundcloudUser {
 
     @Id

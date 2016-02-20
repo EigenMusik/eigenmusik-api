@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Soundcloud implementation of the source abstract.
+ */
 @Service
 @ConfigurationProperties(prefix = "soundcloud")
 public class Soundcloud extends Source {
@@ -27,18 +30,17 @@ public class Soundcloud extends Source {
 
     @Autowired
     public Soundcloud(
-            SourceAccountRepository sourceAccountRepository,
             SoundcloudGateway soundcloudGateway,
             SoundcloudAccessTokenRepository soundcloudAccessTokenRepository,
             SoundcloudUserRepository soundcloudUserRepository,
             SoundcloudConfiguration soundcloudConfiguration) {
-        super(sourceAccountRepository);
         this.soundcloudGateway = soundcloudGateway;
         this.soundcloudAccessTokenRepository = soundcloudAccessTokenRepository;
         this.soundcloudUserRepository = soundcloudUserRepository;
         this.soundcloudConfiguration = soundcloudConfiguration;
     }
 
+    @Override
     public SourceAccount getAccount(SourceAccountAuthentication auth) throws SourceAuthenticationException {
         try {
             SoundcloudAccessToken soundcloudAccessToken = soundcloudGateway.exchangeToken(auth.getCode());
@@ -57,6 +59,7 @@ public class Soundcloud extends Source {
         }
     }
 
+    @Override
     public List<Track> getTracks(SourceAccount account) {
         List<Track> tracks = new ArrayList<>();
         SoundcloudUser soundcloudUser = soundcloudUserRepository.findOne(account.getUri());
@@ -81,18 +84,26 @@ public class Soundcloud extends Source {
                 + "&response_type=code" + "&redirect_uri=" + soundcloudConfiguration.getRedirectUrl();
     }
 
+    @Override
     public SourceType getType() {
         return SourceType.SOUNDCLOUD;
     }
 
+    @Override
     public TrackStreamUrl getStreamUrl(Track track) {
         log.info(track.getTrackSource().getOwner().getUri());
         SoundcloudUser soundcloudUser = soundcloudUserRepository.findOne(Long.valueOf(track.getTrackSource().getOwner().getUri()));
         return new TrackStreamUrl(soundcloudGateway.getStreamUrl(Long.valueOf(track.getTrackSource().getUri()), soundcloudUser.getAccessToken()));
     }
 
-    // TODO where should this live?
-    private Track mapToTrack(SoundcloudTrack t, SourceAccount account) {
+    /**
+     * Static helper function to map a Soundcloud track to an EigenMusik entity.
+     *
+     * @param t
+     * @param account
+     * @return Track
+     */
+    private static Track mapToTrack(SoundcloudTrack t, SourceAccount account) {
         TrackSource trackSource = new TrackSource();
         trackSource.setUri(t.getSoundcloudId().toString());
         trackSource.setSource(SourceType.SOUNDCLOUD);

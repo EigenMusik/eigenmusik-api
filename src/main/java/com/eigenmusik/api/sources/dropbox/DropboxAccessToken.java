@@ -13,7 +13,6 @@ public class DropboxAccessToken {
     private String accessToken;
 
     public DropboxAccessToken() {
-
     }
 
     public DropboxAccessToken(String accessToken) {

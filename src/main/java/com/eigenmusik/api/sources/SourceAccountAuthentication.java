@@ -3,6 +3,9 @@ package com.eigenmusik.api.sources;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * An object to map external source authentication requests.
+ */
 public class SourceAccountAuthentication {
 
     private String code;

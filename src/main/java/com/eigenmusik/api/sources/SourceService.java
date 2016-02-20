@@ -10,6 +10,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The EigenMusik external source service.
+ */
 @Service
 public class SourceService {
 
@@ -24,31 +27,66 @@ public class SourceService {
         this.trackService = trackService;
     }
 
+    /**
+     * Get the external source accounts associated with the user.
+     *
+     * @param userProfile
+     * @return
+     */
     public List<SourceAccount> getAccounts(UserProfile userProfile) {
         return sourceAccountRepository.findByOwner(userProfile);
     }
 
+    /**
+     * Add an external account for the given user.
+     *
+     * @param sourceType
+     * @param auth
+     * @param userProfile
+     * @return
+     * @throws SourceAuthenticationException
+     */
     public SourceAccount addAccount(SourceType sourceType, SourceAccountAuthentication auth, UserProfile userProfile) throws SourceAuthenticationException {
         Source source = sourceFactory.build(sourceType);
 
         SourceAccount sourceAccount = source.getAccount(auth);
         sourceAccount.setOwner(userProfile);
-        source.save(sourceAccount);
+        save(sourceAccount);
 
         syncAccount(sourceAccount);
 
         return sourceAccount;
     }
 
+    /**
+     * Sync the source account with the external source.
+     *
+     * @param sourceAccount
+     */
     public void syncAccount(SourceAccount sourceAccount) {
         trackService.save(sourceFactory.build(sourceAccount.getSource()).getTracks(sourceAccount), sourceAccount.getOwner());
     }
 
+    /**
+     * Get a list of available sources.
+     *
+     * @return
+     */
     public List<SourceJson> getSources() {
         return Arrays.asList(SourceType.values())
                 .stream()
                 .map(sourceTypes -> sourceFactory.build(sourceTypes).getJson())
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Save a source account.
+     *
+     * @param sourceAccount
+     * @return
+     */
+    public SourceAccount save(SourceAccount sourceAccount) {
+        return sourceAccountRepository.save(sourceAccount);
     }
 
 }

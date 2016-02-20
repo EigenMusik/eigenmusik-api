@@ -14,6 +14,9 @@ import org.springframework.data.web.HateoasPageableHandlerMethodArgumentResolver
 import java.net.URI;
 import java.net.URISyntaxException;
 
+/**
+ * Rest configuration.
+ */
 @Configuration
 @Import(RepositoryRestMvcConfiguration.class)
 public class RestConfiguration extends RepositoryRestMvcConfiguration {

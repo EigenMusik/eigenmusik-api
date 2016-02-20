@@ -2,8 +2,8 @@ language: java
 jdk:
 - oraclejdk8
 before_script:
-  - psql -c 'create database eigenmusik;' -U postgres
-install: mvn clean install -Dmaven.javadoc.skip=false -B -V -DskipTests=true 
+- psql -c 'create database eigenmusik;' -U postgres
+install: mvn clean install -Dmaven.javadoc.skip=false -B -V -DskipTests=true
 cache:
   directories:
   - .autoconf
@@ -11,4 +11,4 @@ cache:
 deploy:
   provider: heroku
   api_key:
-    secure: "Cpe23pMkS+D01d5bUxGzP3B+Hgs8jojALDZEruL/9e0bcbA5AfvBn/FYAln9oimc/kl4nusVzjh0a3C8wAlThDD3PkWKa+fydQetFvPWhchHEwES4Z3F/PkIP+USSTbT2xkYsgxEOXigSJR9Ppmg4wbl7u/YkjUE0Y1rgytKXCudLjprbbud6n9ZiLBtxoImYLh3cK/vl190hbiOeQ8eXbSj4mciY0BHdvHR8fovK6XiJEnRhvM0qCc5xkFhdDsSJK9kX09oFe4b30OCifM6WYghmfztt3gE+feBkJ0knpsBwHNty/XgaywUS23SWr2FSXq8nAtg6XUUxW7BJYnUCDlfGGMnugxoYauVyR2lo/dHvn0q7FJCh45hNTeiyGlC1fwmWgXp/9Kxs/zBrG+mONAYnkwvtsmd0h95+3arxrAhq8T1jsBJrTop6qRA5gZMF5YYF6diIjBy6MCh3HakpHhXVebyegy4NK1h1qNLcO99mm2YPlIASWdRxu6bW3eBAAj8z6E/0Hv5r/r1ct62KDLxo7CfHH0S6oHa+W2TOO5hQvBPSBLm4p1XVbLTMWuMqvr65ji99EdgBmYQAc+06cPizrx0RfI4RoeJ/rPERuoLDlZ9v9IQMbc4xF+lOJi6zs6vrcA8oJbeex1sRYItTa1NF4K0ewZWdAIDUaH1DNE="
+    secure: K6wqQHyJIJ90jA7S5dHFgs85A5cXmxh8lsPU1upaxTqCp8IYyxQIdyXLCHbzEdOY4I21jiyRCn8Q8jLRVVAoZgoCc/RfFBBcl77xGQaOS/mdPFR8iYf/ATXXaheesBRn7OtMHLm/Qo3p8oCoSK/AJ48Ov8QUKUBbZsCJf6ykHuOGt90rcwmJtqsyTXUgthgKh4XLPmyTjGcOwVTCsWbuGmmInZRatKTmgGpc+2OAfY9ZnRYwhzTzui4p5dhJG7cCyA8xpdBg6v1rNGFv/xTLbj4TyH/DiTyyNUaWp/XaGqt6R2jwB9T7GTU+oval7oUN/Lfi7YC9QFOGlhLRSBfKDhsUQ8bKF1DtbTb55pJ+Yx/2vyeADLJnwESNiluC9jb/6RSq6WBYaRHbvkQa18DGMMLMUgF1UL3JWaHZyImDrE7Y5ObMU3DgM7Uwxb6as8GX+G4xsUKt3qLpSVflkskTy43en9N+VjhYBjDlN5HV/tO66i2hJHVeBXwAR7sOwQzU+svTie3vxzM7J/O6oBpmR4/J+SvJhZzrzsVnnkc7eFc/Y6TaQwxv0qFBnXywg9QONx5MFiiM4i+0fPw/8DM9R2BSn5+KU0lNZNu7z3Sv7W3RjaMMwxT52mSCzucjdJ2ZCx0Bnh4KaJw+ykNiGYNR/N6o1RHUxqAXLC7SMjLeUvg=

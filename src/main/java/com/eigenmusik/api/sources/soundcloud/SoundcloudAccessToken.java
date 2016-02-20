@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+// TODO DRY the authtoken stuff up.
 @Entity
 public class SoundcloudAccessToken {
 

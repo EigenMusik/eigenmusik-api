@@ -251,7 +251,7 @@
                         </goals>
                         <phase>generate-sources</phase>
                         <configuration>
-                            <show>private</show>
+                            <show>public</show>
                         </configuration>
                     </execution>
                 </executions>

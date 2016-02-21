@@ -1,6 +1,6 @@
 package ut.com.eigenmusik.api.sources.soundcloud;
 
-import com.eigenmusik.api.exceptions.SourceAuthenticationException;
+import com.eigenmusik.api.sources.SourceAuthenticationException;
 import com.eigenmusik.api.sources.SourceAccountAuthentication;
 import com.eigenmusik.api.sources.SourceAccountRepository;
 import com.eigenmusik.api.sources.SourceType;

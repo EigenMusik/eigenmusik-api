@@ -1,8 +1,6 @@
 package ut.com.eigenmusik.api.user;
 
-import com.eigenmusik.api.exceptions.EmailExistsException;
-import com.eigenmusik.api.exceptions.UserDoesntExistException;
-import com.eigenmusik.api.exceptions.UsernameExistsException;
+import com.eigenmusik.api.common.ValidationException;
 import com.eigenmusik.api.user.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +28,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testRegistration() throws EmailExistsException, UsernameExistsException {
+    public void testRegistration() throws ValidationException {
         User user = factory.manufacturePojo(User.class);
         user.setUserProfile(null);
         when(userRepository.findByEmail(user.getEmail())).thenReturn(null);
@@ -40,16 +38,16 @@ public class UserServiceTest {
         verify(userProfileRepository, times(1)).save(Mockito.any(UserProfile.class));
     }
 
-    @Test(expected = EmailExistsException.class)
-    public void testDuplicateRegistrationByEmail() throws EmailExistsException, UsernameExistsException {
+    @Test(expected = ValidationException.class)
+    public void testDuplicateRegistrationByEmail() throws ValidationException {
         User user = factory.manufacturePojo(User.class);
         when(userRepository.findByEmail(user.getEmail())).thenReturn(user);
         when(userRepository.findByName(user.getName())).thenReturn(null);
         userService.register(user);
     }
 
-    @Test(expected = UsernameExistsException.class)
-    public void testDuplicateRegistrationByUsername() throws EmailExistsException, UsernameExistsException {
+    @Test(expected = ValidationException.class)
+    public void testDuplicateRegistrationByUsername() throws ValidationException {
         User user = factory.manufacturePojo(User.class);
         when(userRepository.findByEmail(user.getEmail())).thenReturn(null);
         when(userRepository.findByName(user.getName())).thenReturn(user);

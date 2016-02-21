@@ -1,8 +1,6 @@
 package com.eigenmusik.api.sources.googledrive;
 
 import com.eigenmusik.api.config.EigenMusikConfiguration;
-import com.eigenmusik.api.exceptions.SourceAuthenticationException;
-import com.eigenmusik.api.exceptions.UserDoesntExistException;
 import com.eigenmusik.api.sources.*;
 import com.eigenmusik.api.tracks.Track;
 import com.eigenmusik.api.tracks.TrackSource;
@@ -21,7 +19,6 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.oauth2.Oauth2;
 import com.google.api.services.oauth2.model.Userinfoplus;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
@@ -30,7 +27,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,11 +37,10 @@ import java.util.stream.Collectors;
 @Service
 public class GoogleDrive extends Source {
 
-    private static Logger log = Logger.getLogger(GoogleDrive.class);
-
     private static final JacksonFactory JSON_FACTORY =
             JacksonFactory.getDefaultInstance();
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+    private static Logger log = Logger.getLogger(GoogleDrive.class);
     private final List<String> SCOPES = Arrays.asList(
             "https://www.googleapis.com/auth/drive",
             "https://www.googleapis.com/auth/drive.apps.readonly",
@@ -71,10 +66,10 @@ public class GoogleDrive extends Source {
      *
      * @param credentials
      * @return
-     * @throws UserDoesntExistException
+     * @throws GoogleDriveUserDoesntExistException
      */
     static Userinfoplus getUserInfo(Credential credentials)
-            throws UserDoesntExistException {
+            throws GoogleDriveUserDoesntExistException {
         Oauth2 userInfoService = new Oauth2.Builder(
                 HTTP_TRANSPORT, JSON_FACTORY, credentials)
                 .setApplicationName(EigenMusikConfiguration.APP_NAME)
@@ -92,7 +87,7 @@ public class GoogleDrive extends Source {
         if (userInfo != null && userInfo.getId() != null) {
             return userInfo;
         } else {
-            throw new UserDoesntExistException();
+            throw new GoogleDriveUserDoesntExistException();
         }
     }
 
@@ -106,6 +101,28 @@ public class GoogleDrive extends Source {
         return new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, credentials)
                 .setApplicationName(EigenMusikConfiguration.APP_NAME)
                 .build();
+    }
+
+    /**
+     * Static helper function to map a Google Drive file to an EigenMusik entity.
+     *
+     * @param file
+     * @param user
+     * @param sourceAccount
+     * @return Track
+     */
+    private static Track mapToTrack(File file, GoogleDriveUser user, SourceAccount sourceAccount) {
+        TrackSource trackSource = new TrackSource();
+        trackSource.setUri(file.getId());
+        trackSource.setSource(SourceType.GOOGLEDRIVE);
+        trackSource.setOwner(sourceAccount);
+
+        Track track = new Track();
+        track.setName(file.getTitle());
+        track.setArtist("Drive File");
+        track.setTrackSource(trackSource);
+
+        return track;
     }
 
     @Override
@@ -153,7 +170,7 @@ public class GoogleDrive extends Source {
 
             return account;
 
-        } catch (IOException | UserDoesntExistException e) {
+        } catch (IOException | GoogleDriveUserDoesntExistException e) {
             throw new SourceAuthenticationException(SourceType.GOOGLEDRIVE);
         }
     }
@@ -189,10 +206,10 @@ public class GoogleDrive extends Source {
         String scopes = SCOPES.stream().reduce("", (acc, scope) -> acc + " " + scope);
         String query = URLEncodedUtils.format(
                 Arrays.asList(
-                    new BasicNameValuePair("scope", scopes),
-                    new BasicNameValuePair("client_id", googleDriveConfiguration.getClientId()),
-                    new BasicNameValuePair("response_type", "code"),
-                    new BasicNameValuePair("redirect_uri", googleDriveConfiguration.getRedirectUrl())
+                        new BasicNameValuePair("scope", scopes),
+                        new BasicNameValuePair("client_id", googleDriveConfiguration.getClientId()),
+                        new BasicNameValuePair("response_type", "code"),
+                        new BasicNameValuePair("redirect_uri", googleDriveConfiguration.getRedirectUrl())
                 ), "UTF-8");
         // TODO bash this into configuration.
         return "https://accounts.google.com/o/oauth2/v2/auth?" + query;
@@ -200,28 +217,6 @@ public class GoogleDrive extends Source {
 
     public SourceType getType() {
         return SourceType.GOOGLEDRIVE;
-    }
-
-    /**
-     * Static helper function to map a Google Drive file to an EigenMusik entity.
-     *
-     * @param file
-     * @param user
-     * @param sourceAccount
-     * @return Track
-     */
-    private static Track mapToTrack(File file, GoogleDriveUser user, SourceAccount sourceAccount) {
-        TrackSource trackSource = new TrackSource();
-        trackSource.setUri(file.getId());
-        trackSource.setSource(SourceType.GOOGLEDRIVE);
-        trackSource.setOwner(sourceAccount);
-
-        Track track = new Track();
-        track.setName(file.getTitle());
-        track.setArtist("Drive File");
-        track.setTrackSource(trackSource);
-
-        return track;
     }
 
     private GoogleAuthorizationCodeFlow getFlow() throws IOException {

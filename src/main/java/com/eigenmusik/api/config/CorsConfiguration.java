@@ -11,6 +11,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
  * Global Cors configuration to allow requests from the SPA.
  */
 @Configuration
+@Order(-1)
 public class CorsConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {

@@ -5,7 +5,6 @@ import com.dropbox.core.v1.DbxClientV1;
 import com.dropbox.core.v1.DbxEntry;
 import com.dropbox.core.v2.DbxClientV2;
 import com.eigenmusik.api.config.EigenMusikConfiguration;
-import com.eigenmusik.api.exceptions.SourceAuthenticationException;
 import com.eigenmusik.api.sources.*;
 import com.eigenmusik.api.tracks.Track;
 import com.eigenmusik.api.tracks.TrackSource;
@@ -89,7 +88,7 @@ public class Dropbox extends Source {
 
             return account;
         } catch (DbxWebAuth.BadRequestException | DbxException | DbxWebAuth.ProviderException | DbxWebAuth.CsrfException | DbxWebAuth.NotApprovedException | DbxWebAuth.BadStateException e) {
-            // TODO bit of a code smell catching all these exceptions, perhaps it's a third party inevitability.
+            // TODO bit of a code smell catching all these messages, perhaps it's a third party inevitability.
             throw new SourceAuthenticationException(SourceType.DROPBOX);
         }
     }

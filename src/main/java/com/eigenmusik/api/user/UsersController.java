@@ -1,8 +1,6 @@
 package com.eigenmusik.api.user;
 
-import com.eigenmusik.api.exceptions.EmailExistsException;
-import com.eigenmusik.api.exceptions.UserDoesntExistException;
-import com.eigenmusik.api.exceptions.UsernameExistsException;
+import com.eigenmusik.api.common.ValidationException;
 import io.swagger.annotations.Api;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.security.Principal;
+
+import static com.eigenmusik.api.common.Errors.newError;
 
 @RequestMapping("/users")
 @Controller
@@ -29,8 +29,13 @@ public class UsersController {
     @RequestMapping(value = "/me", method = RequestMethod.GET)
     public
     @ResponseBody
-    ResponseEntity<?> getMe(Principal principal) throws UserDoesntExistException {
-        return new ResponseEntity<>(userService.getByUsername(principal.getName()), HttpStatus.OK);
+    ResponseEntity<?> getMe(Principal principal) {
+        try {
+            User user = userService.getByUsername(principal.getName());
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } catch (UserDoesntExistException e) {
+            return new ResponseEntity<>(newError(e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
@@ -39,11 +44,9 @@ public class UsersController {
     ResponseEntity<?> register(@RequestBody User user) {
         try {
             userService.register(user);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (UsernameExistsException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (EmailExistsException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (ValidationException e) {
+            return new ResponseEntity<>(e.getErrors(), HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

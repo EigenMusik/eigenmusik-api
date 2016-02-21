@@ -1,7 +1,6 @@
 package com.eigenmusik.api.sources;
 
-import com.eigenmusik.api.exceptions.SourceAuthenticationException;
-import com.eigenmusik.api.exceptions.UserDoesntExistException;
+import com.eigenmusik.api.user.UserDoesntExistException;
 import com.eigenmusik.api.user.UserProfile;
 import com.eigenmusik.api.user.UserService;
 import io.swagger.annotations.Api;

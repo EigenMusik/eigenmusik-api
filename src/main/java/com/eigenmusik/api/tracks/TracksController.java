@@ -1,9 +1,9 @@
 package com.eigenmusik.api.tracks;
 
-import com.eigenmusik.api.exceptions.UserDoesntExistException;
 import com.eigenmusik.api.sources.Source;
 import com.eigenmusik.api.sources.SourceFactory;
 import com.eigenmusik.api.user.User;
+import com.eigenmusik.api.user.UserDoesntExistException;
 import com.eigenmusik.api.user.UserService;
 import io.swagger.annotations.Api;
 import org.apache.log4j.Logger;

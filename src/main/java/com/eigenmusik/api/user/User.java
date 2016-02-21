@@ -9,12 +9,17 @@ public class User {
     @Id
     @GeneratedValue
     private Long id;
+
     private String name;
+
     @Column(unique = true)
     private String email;
+
     @Column(nullable = false)
     private String password;
+
     private boolean isActive;
+
     @OneToOne(optional = true, fetch = FetchType.EAGER)
     private UserProfile userProfile;
 

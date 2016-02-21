@@ -1,8 +1,8 @@
 package com.eigenmusik.api.user;
 
-import com.eigenmusik.api.exceptions.EmailExistsException;
-import com.eigenmusik.api.exceptions.UserDoesntExistException;
-import com.eigenmusik.api.exceptions.UsernameExistsException;
+import com.eigenmusik.api.common.Errors;
+import com.eigenmusik.api.common.ValidationException;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,6 +17,7 @@ import java.util.List;
 @Service
 public class UserService implements UserDetailsService {
 
+    private final Logger log = Logger.getLogger(UserService.class);
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
 
@@ -44,16 +45,21 @@ public class UserService implements UserDetailsService {
      *
      * @param user
      * @return
-     * @throws UsernameExistsException
-     * @throws EmailExistsException
+     * @throws ValidationException
      */
-    public User register(User user) throws UsernameExistsException, EmailExistsException {
+    public User register(User user) throws ValidationException {
 
-        // Check if a user with conflicting parameters exists.
+        // Validate user.
+        Errors errors = new Errors();
         if (userRepository.findByName(user.getName()) != null) {
-            throw new UsernameExistsException();
-        } else if (userRepository.findByEmail(user.getEmail()) != null) {
-            throw new EmailExistsException();
+            errors.addError("USERNAME_EXISTS");
+        }
+
+        if (userRepository.findByEmail(user.getEmail()) != null) {
+            errors.addError("EMAIL_EXISTS");
+        }
+        if (errors.notEmpty()) {
+            throw new ValidationException(errors);
         }
 
         user.setActive(true);

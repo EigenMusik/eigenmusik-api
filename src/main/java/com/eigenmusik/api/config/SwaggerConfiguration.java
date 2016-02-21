@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Pageable;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.ParameterBuilder;
+import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
@@ -36,7 +38,19 @@ public class SwaggerConfiguration {
                 .build()
                 .securitySchemes(newArrayList(securitySchema()))
                 .securityContexts(newArrayList(securityContext()))
-                .ignoredParameterTypes(Principal.class, Pageable.class);
+                .ignoredParameterTypes(Principal.class, Pageable.class)
+                .globalOperationParameters(
+                        newArrayList(
+                                new ParameterBuilder()
+                                        .name("lang")
+                                        .description("Locale")
+                                        .modelRef(new ModelRef("string"))
+                                        .parameterType("query")
+                                        .required(false)
+                                        .defaultValue("en")
+                                        .build()
+                        )
+                );
     }
 
     public AuthorizationScope global() {

@@ -1,6 +1,5 @@
 package com.eigenmusik.api.sources;
 
-import com.eigenmusik.api.exceptions.SourceAuthenticationException;
 import com.eigenmusik.api.tracks.TrackService;
 import com.eigenmusik.api.user.UserProfile;
 import org.springframework.beans.factory.annotation.Autowired;

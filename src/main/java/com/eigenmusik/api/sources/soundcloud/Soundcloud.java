@@ -1,6 +1,5 @@
 package com.eigenmusik.api.sources.soundcloud;
 
-import com.eigenmusik.api.exceptions.SourceAuthenticationException;
 import com.eigenmusik.api.sources.*;
 import com.eigenmusik.api.tracks.Track;
 import com.eigenmusik.api.tracks.TrackSource;
@@ -38,6 +37,26 @@ public class Soundcloud extends Source {
         this.soundcloudAccessTokenRepository = soundcloudAccessTokenRepository;
         this.soundcloudUserRepository = soundcloudUserRepository;
         this.soundcloudConfiguration = soundcloudConfiguration;
+    }
+
+    /**
+     * Static helper function to map a Soundcloud track to an EigenMusik entity.
+     *
+     * @param t
+     * @param account
+     * @return Track
+     */
+    private static Track mapToTrack(SoundcloudTrack t, SourceAccount account) {
+        TrackSource trackSource = new TrackSource();
+        trackSource.setUri(t.getSoundcloudId().toString());
+        trackSource.setSource(SourceType.SOUNDCLOUD);
+        trackSource.setOwner(account);
+
+        Track track = new Track();
+        track.setName(t.getTitle());
+        track.setArtist(t.getArtist());
+        track.setTrackSource(trackSource);
+        return track;
     }
 
     @Override
@@ -94,26 +113,6 @@ public class Soundcloud extends Source {
         log.info(track.getTrackSource().getOwner().getUri());
         SoundcloudUser soundcloudUser = soundcloudUserRepository.findOne(Long.valueOf(track.getTrackSource().getOwner().getUri()));
         return new TrackStreamUrl(soundcloudGateway.getStreamUrl(Long.valueOf(track.getTrackSource().getUri()), soundcloudUser.getAccessToken()));
-    }
-
-    /**
-     * Static helper function to map a Soundcloud track to an EigenMusik entity.
-     *
-     * @param t
-     * @param account
-     * @return Track
-     */
-    private static Track mapToTrack(SoundcloudTrack t, SourceAccount account) {
-        TrackSource trackSource = new TrackSource();
-        trackSource.setUri(t.getSoundcloudId().toString());
-        trackSource.setSource(SourceType.SOUNDCLOUD);
-        trackSource.setOwner(account);
-
-        Track track = new Track();
-        track.setName(t.getTitle());
-        track.setArtist(t.getArtist());
-        track.setTrackSource(trackSource);
-        return track;
     }
 
 }

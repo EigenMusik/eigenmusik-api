@@ -67,7 +67,6 @@ public class SoundcloudGateway {
 
     public String getStreamUrl(Long soundcloudId, SoundcloudAccessToken accessToken) {
         String requestUrl = REST_API + "/tracks/" + soundcloudId + "?oauth_token=" + accessToken.getAccessToken();
-        log.info("Request url = " + requestUrl);
         SoundcloudTrackJson soundcloudTrackJson = restTemplate.getForEntity(requestUrl, SoundcloudTrackJson.class).getBody();
         return soundcloudTrackJson.getStreamUrl() + "?oauth_token=" + accessToken.getAccessToken();
     }

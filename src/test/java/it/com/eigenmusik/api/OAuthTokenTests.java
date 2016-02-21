@@ -1,7 +1,6 @@
 package it.com.eigenmusik.api;
 
-import com.eigenmusik.api.exceptions.EmailExistsException;
-import com.eigenmusik.api.exceptions.UsernameExistsException;
+import com.eigenmusik.api.common.ValidationException;
 import com.eigenmusik.api.user.User;
 import com.eigenmusik.api.user.UserService;
 import org.junit.Before;
@@ -17,7 +16,7 @@ public class OAuthTokenTests extends IntegrationTestsBase {
     UserService userService;
 
     @Before
-    public void Setup() throws EmailExistsException, UsernameExistsException {
+    public void Setup() throws ValidationException {
 
     }
 
@@ -27,7 +26,7 @@ public class OAuthTokenTests extends IntegrationTestsBase {
     }
 
     @Test
-    public void testAuthorized() throws Exception {
+    public void testAuthorized() throws Exception, ValidationException {
         User user = new User();
         user.setName("aUser");
         user.setEmail("anEmail@email.com");

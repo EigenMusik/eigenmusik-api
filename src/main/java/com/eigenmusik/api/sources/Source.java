@@ -1,9 +1,7 @@
 package com.eigenmusik.api.sources;
 
-import com.eigenmusik.api.exceptions.SourceAuthenticationException;
 import com.eigenmusik.api.tracks.Track;
 import com.eigenmusik.api.tracks.TrackStreamUrl;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -30,7 +28,7 @@ public abstract class Source {
     public abstract TrackStreamUrl getStreamUrl(Track track);
 
     /**
-     *  Given an authentication object, return a new EigenMusik source account.
+     * Given an authentication object, return a new EigenMusik source account.
      *
      * @param auth
      * @return

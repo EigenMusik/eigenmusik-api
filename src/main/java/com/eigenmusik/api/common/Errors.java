@@ -8,11 +8,6 @@ import java.util.Map;
 public class Errors {
     private List<ErrorJson> errors = new ArrayList<>();
 
-    public Errors() {
-    }
-
-    ;
-
     public static Errors newError(String message, Map<String, String> params) {
         Errors errors = new Errors();
         errors.addError(message, params);

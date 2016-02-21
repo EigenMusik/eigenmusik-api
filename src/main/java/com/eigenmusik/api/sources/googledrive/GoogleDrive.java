@@ -68,7 +68,7 @@ public class GoogleDrive extends Source {
      * @return
      * @throws GoogleDriveUserDoesntExistException
      */
-    static Userinfoplus getUserInfo(Credential credentials)
+    private static Userinfoplus getUserInfo(Credential credentials)
             throws GoogleDriveUserDoesntExistException {
         Oauth2 userInfoService = new Oauth2.Builder(
                 HTTP_TRANSPORT, JSON_FACTORY, credentials)
@@ -97,7 +97,7 @@ public class GoogleDrive extends Source {
      * @param credentials OAuth 2.0 credentials.
      * @return Drive service object.
      */
-    static Drive buildService(Credential credentials) {
+    private static Drive buildService(Credential credentials) {
         return new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, credentials)
                 .setApplicationName(EigenMusikConfiguration.APP_NAME)
                 .build();
@@ -107,11 +107,10 @@ public class GoogleDrive extends Source {
      * Static helper function to map a Google Drive file to an EigenMusik entity.
      *
      * @param file
-     * @param user
      * @param sourceAccount
      * @return Track
      */
-    private static Track mapToTrack(File file, GoogleDriveUser user, SourceAccount sourceAccount) {
+    private static Track mapToTrack(File file, SourceAccount sourceAccount) {
         TrackSource trackSource = new TrackSource();
         trackSource.setUri(file.getId());
         trackSource.setSource(SourceType.GOOGLEDRIVE);
@@ -187,7 +186,7 @@ public class GoogleDrive extends Source {
         Drive drive = buildService(credentials);
 
         try {
-            return drive.files().list().setQ("mimeType contains 'audio'").execute().getItems().stream().map(file -> mapToTrack(file, googleDriveUser, account)).collect(Collectors.toList());
+            return drive.files().list().setQ("mimeType contains 'audio'").execute().getItems().stream().map(file -> mapToTrack(file, account)).collect(Collectors.toList());
         } catch (IOException e) {
             e.printStackTrace();
         }

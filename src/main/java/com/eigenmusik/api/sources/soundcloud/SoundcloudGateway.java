@@ -3,7 +3,6 @@ package com.eigenmusik.api.sources.soundcloud;
 import com.eigenmusik.api.sources.soundcloud.json.SoundcloudAccessTokenJson;
 import com.eigenmusik.api.sources.soundcloud.json.SoundcloudTrackJson;
 import com.eigenmusik.api.sources.soundcloud.json.SoundcloudUserJson;
-import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -23,7 +22,6 @@ import java.util.stream.Collectors;
 @Component
 public class SoundcloudGateway {
 
-    private static Logger log = Logger.getLogger(SoundcloudGateway.class);
     private final SoundcloudConfiguration config;
     private final String REST_API = "https://api.soundcloud.com";
     private RestTemplate restTemplate;

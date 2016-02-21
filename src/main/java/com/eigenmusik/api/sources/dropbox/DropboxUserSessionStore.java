@@ -10,9 +10,6 @@ public class DropboxUserSessionStore implements DbxSessionStore {
 
     public final static String fakeCsrfToken = "FAKESESSIONTOKENBECAUSEIDONTREALLYCAREABOUTXRSSFATTHISPOINT";
 
-    public DropboxUserSessionStore() {
-    }
-
     @Override
     public String get() {
         return fakeCsrfToken;

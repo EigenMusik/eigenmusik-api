@@ -34,9 +34,9 @@ public abstract class IntegrationTestsBase {
     protected WebApplicationContext context;
     protected MockMvc mvc;
     @Autowired
-    FilterChainProxy springSecurityFilter;
+    protected FilterChainProxy springSecurityFilter;
     @Autowired
-    DefaultTokenServices defaultTokenServices;
+    protected DefaultTokenServices defaultTokenServices;
 
     @Before
     public void setUp() {

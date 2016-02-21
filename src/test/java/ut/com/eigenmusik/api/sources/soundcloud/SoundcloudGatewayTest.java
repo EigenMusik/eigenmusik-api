@@ -92,7 +92,6 @@ public class SoundcloudGatewayTest {
 
     @Test
     public void testGetMe() throws IOException {
-        Long userId = 123L;
         SoundcloudAccessToken accessToken = factory.manufacturePojo(SoundcloudAccessToken.class);
         accessToken.setAccessToken("token");
 
@@ -108,7 +107,6 @@ public class SoundcloudGatewayTest {
 
     @Test(expected = HttpClientErrorException.class)
     public void testFailedGetMe() throws IOException {
-        Long userId = 123L;
         SoundcloudAccessToken accessToken = factory.manufacturePojo(SoundcloudAccessToken.class);
         accessToken.setAccessToken("token");
 

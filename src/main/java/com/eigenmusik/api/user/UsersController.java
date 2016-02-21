@@ -2,7 +2,6 @@ package com.eigenmusik.api.user;
 
 import com.eigenmusik.api.common.ValidationException;
 import io.swagger.annotations.Api;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +19,6 @@ import static com.eigenmusik.api.common.Errors.newError;
 @Controller
 @Api(value = "users")
 public class UsersController {
-
-    private static Logger log = Logger.getLogger(UsersController.class);
 
     @Autowired
     private UserService userService;

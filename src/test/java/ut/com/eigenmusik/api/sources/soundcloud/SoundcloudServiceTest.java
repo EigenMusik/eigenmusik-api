@@ -18,19 +18,14 @@ import static org.mockito.Mockito.when;
 public class SoundcloudServiceTest {
 
     private SoundcloudGateway soundcloudGateway;
-    private SoundcloudUserRepository soundcloudUserRepository;
-    private SoundcloudAccessTokenRepository soundcloudAccessTokenRepository;
     private Soundcloud soundcloudService;
-    private SourceAccountRepository sourceAccountRepository;
-    private SoundcloudConfiguration soundcloudConfiguration;
 
     @Before
     public void setUp() throws IOException {
         soundcloudGateway = mock(SoundcloudGateway.class);
-        soundcloudUserRepository = mock(SoundcloudUserRepository.class);
-        soundcloudAccessTokenRepository = mock(SoundcloudAccessTokenRepository.class);
-        sourceAccountRepository = mock(SourceAccountRepository.class);
-        soundcloudConfiguration = mock(SoundcloudConfiguration.class);
+        SoundcloudUserRepository soundcloudUserRepository = mock(SoundcloudUserRepository.class);
+        SoundcloudAccessTokenRepository soundcloudAccessTokenRepository = mock(SoundcloudAccessTokenRepository.class);
+        SoundcloudConfiguration soundcloudConfiguration = mock(SoundcloudConfiguration.class);
         soundcloudService = new Soundcloud(soundcloudGateway, soundcloudAccessTokenRepository, soundcloudUserRepository, soundcloudConfiguration);
     }
 

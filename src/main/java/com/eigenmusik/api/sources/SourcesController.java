@@ -4,7 +4,6 @@ import com.eigenmusik.api.user.UserDoesntExistException;
 import com.eigenmusik.api.user.UserProfile;
 import com.eigenmusik.api.user.UserService;
 import io.swagger.annotations.Api;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +17,6 @@ import java.util.List;
 @Controller
 @Api
 public class SourcesController {
-
-    private static Logger log = Logger.getLogger(SourcesController.class);
 
     @Autowired
     private UserService userService;

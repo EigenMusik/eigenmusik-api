@@ -4,7 +4,6 @@ import com.eigenmusik.api.common.ValidationException;
 import com.eigenmusik.api.user.*;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
@@ -22,8 +21,8 @@ public class UserServiceTest {
 
     @Before
     public void setUp() throws IOException {
-        userProfileRepository = Mockito.mock(UserProfileRepository.class);
-        userRepository = Mockito.mock(UserRepository.class);
+        userProfileRepository = mock(UserProfileRepository.class);
+        userRepository = mock(UserRepository.class);
         userService = new UserService(userProfileRepository, userRepository);
     }
 
@@ -34,8 +33,8 @@ public class UserServiceTest {
         when(userRepository.findByEmail(user.getEmail())).thenReturn(null);
         when(userRepository.findByName(user.getName())).thenReturn(null);
         assertEquals(userService.register(user), user);
-        verify(userRepository, times(1)).save(Mockito.any(User.class));
-        verify(userProfileRepository, times(1)).save(Mockito.any(UserProfile.class));
+        verify(userRepository, times(1)).save(any(User.class));
+        verify(userProfileRepository, times(1)).save(any(UserProfile.class));
     }
 
     @Test(expected = ValidationException.class)

@@ -6,7 +6,6 @@ import com.eigenmusik.api.user.User;
 import com.eigenmusik.api.user.UserDoesntExistException;
 import com.eigenmusik.api.user.UserService;
 import io.swagger.annotations.Api;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,8 +21,6 @@ import java.security.Principal;
 @RequestMapping("/tracks")
 @Api(value = "tracks")
 public class TracksController {
-
-    private static Logger log = Logger.getLogger(TracksController.class);
 
     @Autowired
     private TrackService trackService;

@@ -2,7 +2,6 @@ package com.eigenmusik.api.user;
 
 import com.eigenmusik.api.common.Errors;
 import com.eigenmusik.api.common.ValidationException;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,7 +16,6 @@ import java.util.List;
 @Service
 public class UserService implements UserDetailsService {
 
-    private final Logger log = Logger.getLogger(UserService.class);
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
 

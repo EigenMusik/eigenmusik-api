@@ -13,12 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class OAuthTokenTests extends IntegrationTestsBase {
 
     @Autowired
-    UserService userService;
-
-    @Before
-    public void Setup() throws ValidationException {
-
-    }
+    protected UserService userService;
 
     @Test
     public void testNotAuthorized() throws Exception {

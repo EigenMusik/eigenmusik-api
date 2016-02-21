@@ -7,7 +7,6 @@ import javax.persistence.*;
 @Entity
 public class DropboxUser {
 
-
     @Id
     @GeneratedValue
     private Long id;
@@ -33,10 +32,6 @@ public class DropboxUser {
         this.accessToken = accessToken;
     }
 
-    public void setDropboxId(String dropboxId) {
-        this.dropboxId = dropboxId;
-    }
-
     public void setEmail(String email) {
         this.email = email;
     }
@@ -47,5 +42,13 @@ public class DropboxUser {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getDropboxId() {
+        return dropboxId;
+    }
+
+    public void setDropboxId(String dropboxId) {
+        this.dropboxId = dropboxId;
     }
 }
